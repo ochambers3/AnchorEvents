@@ -1,0 +1,1 @@
+The aim of this project is to allow users to plan trips around seeing multiple sports games/events in a single weekend in any city/region. Please reach out if you have any questions to mr.owen.chambers@gmail.com

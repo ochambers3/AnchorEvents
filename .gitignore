@@ -1,7 +1,10 @@
-# Ignore virtual environments
+# Ignore virtual environments 
 .venv/
 venv/
 env/
+
+# Ignore temporary files ending with ~
+*~
 
 # Ignore Python cache files
 __pycache__/

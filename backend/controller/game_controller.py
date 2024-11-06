@@ -22,7 +22,7 @@ class GameController:
             data = request.json
 
             games = self.service.get_games(db, data)
-            # print(games)
+            print(games)
             # print("jsonifying")
             # print(jsonify(games))
             return jsonify(games), 200

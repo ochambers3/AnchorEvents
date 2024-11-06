@@ -17,11 +17,11 @@ def main():
         # Get the database instance
         db = init_db()
 
-        # #Pass the db instance to the service layer
-        # service = GameService(db)
-        # service.fetch_nba_schedule()
-        # service.fetch_nfl_schedule()
-        # service.fetch_nhl_schedule()
+        #Pass the db instance to the service layer
+        service = GameService(db)
+        service.fetch_nba_schedule()
+        service.fetch_nfl_schedule()
+        service.fetch_nhl_schedule()
 
     # Pass the db instance to the controller as well
     controller = GameController(db, app)

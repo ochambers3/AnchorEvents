@@ -1,20 +1,24 @@
 import sqlite3
 from flask import g
+import os
+
+# Define the path to the database file in the database directory at the project root level
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # Go up one level from backend/
+# print(BASE_DIR)
+DB_PATH = os.path.join(BASE_DIR, 'database', 'schedule.db')
+# print(DB_PATH)
+
 
 def get_db():
     if 'db' not in g:
-        g.db = sqlite3.connect('schedule.db', check_same_thread=False)
+        g.db = sqlite3.connect(DB_PATH, check_same_thread=False)
     return g.db
 
 def init_db():
-    # This function can initialize tables or perform any setup logic.
+    # Initialize the db
     db = get_db()
-    # Here, you could execute SQL to create tables, indexes, etc.
-    # For example:
-    # with open('schema.sql') as f:
-    #     db.executescript(f.read())
 
-    conn = sqlite3.connect('schedule.db')
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS games (

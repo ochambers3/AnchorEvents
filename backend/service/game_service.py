@@ -96,10 +96,10 @@ class GameService:
         weekend = data.get("weekend", None)
         # print("Start Date: ", start_date)
         # print(type(start_date))
-
+        # print("Inside get games")
         games = self.repository.get_games(db, start_date, end_date, city)
-        for game in games:
-            print(game)
+        # for game in games:
+        #     print(game)
 
         # If the weekend filter is applied, group by weekend
         if weekend == True:

@@ -2,6 +2,7 @@ import sqlite3
 from flask import Flask, g
 from flask_cors import CORS
 from service.game_service import GameService
+from api.filter_data import FilterData
 from repository.db_setup import init_db
 from controller.game_controller import GameController
 
@@ -17,11 +18,11 @@ def main():
         # Get the database instance
         db = init_db()
 
-        #Pass the db instance to the service layer
-        service = GameService(db)
-        service.fetch_nba_schedule()
-        service.fetch_nfl_schedule()
-        service.fetch_nhl_schedule()
+        #Passing database to api to get data
+        # api = FilterData(db)
+        # api.nba_filter()
+        # api.nhl_filter()
+        # api.nba_filter()
 
     # Pass the db instance to the controller as well
     controller = GameController(db, app)

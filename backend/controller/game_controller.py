@@ -22,10 +22,13 @@ class GameController:
             data = request.json
 
             games = self.service.get_games(db, data)
-            print(games)
+            # print(games)
             # print("jsonifying")
             # print(jsonify(games))
             return jsonify(games), 200
+        
+
+        
         
         @self.app.route('/test', methods=['POST'])
         def get_test():
@@ -104,23 +107,6 @@ class GameController:
                 "venue": "Rocket Mortgage FieldHouse"
             }]}}
             return jsonify(data), 200
-        
-        @self.app.route('/weighted-date', methods=['POST'])
-        def get_weighted_date():
-            db = self.get_db()
-            data = request.json
-            nfl_weight = data.get("nfl_weight")
-            nba_weight = data.get("nba_weight")
-            nhl_weight = data.get("nhl_weight")
-            selected_leagues = ("NFL", "NBA", "NHL")
-            start_date = data.get("start_date")
-            end_date = data.get("end_date")
-
-            if not all([nfl_weight, nba_weight, nhl_weight, selected_leagues, start_date, end_date]):
-                return jsonify({'error': 'Missing required data'}), 400
-
-            games = self.service.get_games_by_leagues(nfl_weight, nba_weight, nhl_weight, selected_leagues, start_date, end_date, self.db)
-            return jsonify(games), 200
         
 
 

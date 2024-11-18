@@ -17,7 +17,7 @@ class GameRepository:
                   game['city']))
         db.commit()
 
-    def get_games(self, db, start_date, end_date, city):
+    def get_games(self, db, start_date, end_date, city, leagues):
         query = "SELECT * FROM games WHERE 1=1"
         params = []
 
@@ -30,9 +30,28 @@ class GameRepository:
             params.append(end_date)
         
         if city:
-            query += " AND city = ?"
-            params.append(city)
+            query += " AND city IN ("
+            for count, val in enumerate(city):
+                if count+1 < len(city):
+                    query += "?, "
+                    params.append(val)
+                else:
+                    query += "?)"
+                    params.append(val)
+
+        if leagues:
+            query += " AND league IN ("
+            for count, val in enumerate(leagues):
+                if count+1 < len(leagues):
+                    query += "?, "
+                    params.append(val)
+                else:
+                    query += "?)"
+                    params.append(val)
+                #params.append(val)
+
 
         query += " ORDER BY date, time"
+        #return query, tuple(params)
         cursor = db.cursor()
         return cursor.execute(query, tuple(params)).fetchall()

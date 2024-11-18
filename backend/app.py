@@ -5,6 +5,7 @@ from service.game_service import GameService
 from api.filter_data import FilterData
 from repository.db_setup import init_db
 from controller.game_controller import GameController
+from tests.game_tests import GameTests
 
 
 def main():
@@ -22,10 +23,13 @@ def main():
         # api = FilterData(db)
         # api.nba_filter()
         # api.nhl_filter()
-        # api.nba_filter()
+        # api.nfl_filter()
 
     # Pass the db instance to the controller as well
     controller = GameController(db, app)
+
+    # tests = GameTests(db)
+    # tests.test_game_repository(db)
 
     @controller.app.teardown_appcontext
     def close_db(exception):

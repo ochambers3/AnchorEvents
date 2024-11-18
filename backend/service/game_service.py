@@ -13,9 +13,10 @@ class GameService:
         end_date = data.get("end_date", None)
         city = data.get("city", None)
         weekend = data.get("weekend", None)
+        leagues = data.get("leagues", None)
 
         #Get data from the repository layer
-        games = self.repository.get_games(db, start_date, end_date, city)
+        games = self.repository.get_games(db, start_date, end_date, city, leagues)
 
 
         # If the weekend filter is applied, group by weekend

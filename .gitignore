@@ -17,3 +17,7 @@ __pycache__/
 
 # Ignore Jupyter Notebook checkpoints
 .ipynb_checkpoints/
+
+**/node_modules/*
+**/.DS_Store
+**/.env

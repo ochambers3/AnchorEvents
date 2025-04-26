@@ -1,100 +1,67 @@
+from datetime import datetime
 from repository.game_repository import GameRepository
-from datetime import datetime, timedelta, date
+
 
 class GameService:
+    """Service layer for game-related operations."""
 
-    def __init__(self, db):
-        self.db = db
+    def __init__(self):
+        """Initialize the game service."""
         self.repository = GameRepository()
 
-    def get_games(self, db, data):
-        #Set variables if not in data. Start date is at least today's date
-        start_date = data.get("start_date", datetime.today().strftime('%Y-%m-%d'))
-        end_date = data.get("end_date", None)
-        city = data.get("city", None)
-        weekend = data.get("weekend", None)
-        leagues = data.get("leagues", None)
+    def get_games(self, db, filters):
+        """Get games based on the provided filters.
+        
+        Args:
+            db: Database connection
+            filters: Dictionary containing filter parameters:
+                - start_date: Optional start date (YYYY-MM-DD)
+                - end_date: Optional end date (YYYY-MM-DD)
+                - city: Optional city name
+                - weekend: Optional boolean for weekend games only
+        
+        Returns:
+            Dictionary of games organized by date and city
+        """
+        # Extract filter parameters
+        start_date = filters.get('start_date')
+        end_date = filters.get('end_date')
+        city = filters.get('city')
+        weekend = filters.get('weekend', False)
 
-        #Get data from the repository layer
-        games = self.repository.get_games(db, start_date, end_date, city, leagues)
+        # Get games from repository
+        games = self.repository.get_games(
+            db,
+            start_date=start_date,
+            end_date=end_date,
+            cities=[city] if city else None,
+            leagues=None  # Currently not filtering by league
+        )
 
+        # Organize games by date and city
+        organized_games = {}
+        for game in games:
+            date = game['date']
+            city = game['city']
+            
+            # Create date entry if it doesn't exist
+            if date not in organized_games:
+                organized_games[date] = {}
+            
+            # Create city entry if it doesn't exist
+            if city not in organized_games[date]:
+                organized_games[date][city] = []
+            
+            # Add game to the appropriate date and city
+            game_dict = {
+                'id': game['game_id'],
+                'league': game['league'],
+                'date': game['date'],
+                'time': game['time'],
+                'team_away': game['team_away'],
+                'team_home': game['team_home'],
+                'venue': game['venue']
+            }
+            organized_games[date][city].append(game_dict)
 
-        # If the weekend filter is applied, group by weekend
-        games = self.format_response(games, weekend)
-
-
-        if weekend == True:
-            # events = self.group_by_weekend(games)
-            # events = self.get_min_games(events)
-            games = self.get_min_games(games)
-            # return events
-        # games = self.format_response(games)
-        return games
-    
-    def format_response(self, events, weekend):
-        grouped_events = {}
-        #For all events
-        for event in events:
-            game_id, league, date, time, team_away, team_home, venue, city = event
-
-            if weekend == True:
-                event_date = self.get_weekend_start(date)
-            else:
-                event_date = date
-            # Group events by date
-            if event_date not in grouped_events:
-                grouped_events[event_date] = {}
-            #Group events by city within event_date.
-            if city not in grouped_events[event_date]:
-                grouped_events[event_date][city] = []
-
-            grouped_events[event_date][city].append({
-                "id": game_id,
-                "date": date,
-                "time": time,
-                "team_away": team_away,
-                "team_home": team_home,
-                "venue": venue,
-                "league": league
-            })
-        return grouped_events
-    
-    
-    def get_weekend_start(self, my_date):
-        # Logic to calculate the weekend start (Friday)
-        my_date = datetime.strptime(my_date, "%Y-%m-%d")
-        week_day = date.weekday(my_date)
-        if week_day == 4:
-            return str(my_date)[:10]
-        elif week_day == 5:  # Saturday
-            return str(my_date - timedelta(days=1))[:10]
-        elif week_day == 6:  # Sunday
-            return str(my_date - timedelta(days=2))[:10]
-        return str(my_date)[:10]  # Thursday or earlier
-    
-    def get_min_games(self, games):
-        #Only return weekends with at least two games
-        remove = False
-        cities = []
-        weekends = []
-        for weekend in games:
-            for city in games[weekend]:
-                #Make a list of all cities with less than two events
-                if len(games[weekend][city]) < 2:
-                    cities.append(city)
-            #remove those cities from the weekend
-            for city in cities:
-                games[weekend].pop(city)
-            cities = []
-            #Make a list of all weekends with no events
-            if len(games[weekend]) == 0:
-                weekends.append(weekend)
-        #remove empty weekends from data
-        for weekend in weekends:
-            games.pop(weekend)
-        return games
-    
-
-
-
-    
+        return organized_games

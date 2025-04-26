@@ -1,35 +1,51 @@
-from flask import Flask, request, jsonify, g
+from flask import request, jsonify
 from datetime import datetime
 from service.game_service import GameService
-from repository.db_setup import init_db
-import sqlite3
+from utils.db import get_db
 
 
 class GameController:
+    """Controller for handling game-related routes."""
 
-    def __init__(self, db, app):
-        self.db = db
+    def __init__(self, app):
+        """Initialize the controller with Flask app and set up routes.
+        
+        Args:
+            app: Flask application instance
+        """
         self.app = app
-        self.service = GameService(db)
+        self.service = GameService()
         self.setup_routes()
 
     def setup_routes(self):
-    
+        """Set up the routes for the game controller."""
+        
         #Route using today's date and city. Default start-date is today.
         @self.app.route('/date-city', methods=['POST'])
-        def get_date_team():
-            db = init_db()
-            data = request.json
-
-            games = self.service.get_games(db, data)
-            # print(games)
-            # print("jsonifying")
-            # print(jsonify(games))
-            return jsonify(games), 200
+        def get_games():
+            """Handle POST requests to /date-city endpoint.
+            
+            Expects JSON payload with optional fields:
+            - start_date: Start date for game search (YYYY-MM-DD)
+            - end_date: End date for game search (YYYY-MM-DD)
+            - city: City name to filter games by
+            - weekend: Boolean to filter for weekend games only
+            
+            Returns:
+                JSON response with games organized by date and city
+            """
+            try:
+                print("Request received")
+                data = request.json
+                db = get_db()
+                games = self.service.get_games(db, data)
+                print("Games retrieved")
+                print(games)
+                return jsonify(games), 200
+            except Exception as e:
+                return jsonify({'error': str(e)}), 500
         
-
-        
-        
+        # Test route
         @self.app.route('/test', methods=['POST'])
         def get_test():
             data = {
@@ -107,6 +123,3 @@ class GameController:
                 "venue": "Rocket Mortgage FieldHouse"
             }]}}
             return jsonify(data), 200
-        
-
-

@@ -1,55 +1,40 @@
 import sqlite3
 from flask import Flask, g
 from flask_cors import CORS
-from service.game_service import GameService
-from api.filter_data import FilterData
-from repository.db_setup import init_db
 from controller.game_controller import GameController
-from tests.game_tests import GameTests
+from utils.db import close_db
 
 
-def main():
-    # Create the Flask app instance
+def create_app():
+    """Create and configure the Flask application."""
     app = Flask(__name__)
     CORS(app, origins=['http://localhost:3000'], supports_credentials=True)
 
+    # Initialize controllers
+    GameController(app)
 
-    # Create an application context
-    with app.app_context():
-        # Get the database instance
-        db = init_db()
+    # Register database cleanup
+    close_db(app)
 
-        #Passing database to api to get data
-        # api = FilterData(db)
-        # api.nba_filter()
-        # api.nhl_filter()
-        # api.nfl_filter()
+    return app
 
-    # Pass the db instance to the controller as well
-    controller = GameController(db, app)
 
-    # tests = GameTests(db)
-    # tests.test_game_repository(db)
-
-    @controller.app.teardown_appcontext
-    def close_db(exception):
-        db = g.pop('db', None)
-        if db is not None:
-            db.close()
-
-    controller.app.run(debug=True)
+def main():
+    """Main entry point for the application."""
+    app = create_app()
+    app.run(debug=True)
 
 
 if __name__ == "__main__":
     main()
 
 
-#THings to do:
-#The code, as of now, returns blocks without a gap greater than block_size
-#Raps and Leafs play back to back from 2024-12-01 to 2024-12-07 so this is one "Block"
-#Make city specific/Team specific
-#Differentiate between New York Rangers and New Yourk Islanders
-#Add comments
+# Things to do:
+# The code, as of now, returns blocks without a gap greater than block_size
+# Raps and Leafs play back to back from 2024-12-01 to 2024-12-07 so this is one "Block"
+# Make city specific/Team specific
+# Differentiate between New York Rangers and New York Islanders
+# Add comments
 
-#If weekend, only return games with more than one game.
-#Print json data well
+# If weekend, only return games with more than one game.
+# Print json data well

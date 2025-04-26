@@ -8,7 +8,7 @@ from utils.db import close_db
 def create_app():
     """Create and configure the Flask application."""
     app = Flask(__name__)
-    CORS(app, origins=['http://localhost:3000'], supports_credentials=True)
+    CORS(app, origins=['http://localhost:3001'], supports_credentials=True)
 
     # Initialize controllers
     GameController(app)
@@ -22,7 +22,7 @@ def create_app():
 def main():
     """Main entry point for the application."""
     app = create_app()
-    app.run(debug=True)
+    app.run(debug=True, port=5001)
 
 
 if __name__ == "__main__":

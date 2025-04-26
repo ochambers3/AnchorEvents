@@ -17,51 +17,65 @@ class GameService:
             filters: Dictionary containing filter parameters:
                 - start_date: Optional start date (YYYY-MM-DD)
                 - end_date: Optional end date (YYYY-MM-DD)
-                - city: Optional city name
-                - weekend: Optional boolean for weekend games only
+                - cities: Optional list of city names
+                - weekdays: Optional list of weekday numbers (0=Monday, 6=Sunday)
         
         Returns:
-            Dictionary of games organized by date and city
+            Dictionary of games organized by date and city, only including
+            cities with more than one game on the specified weekdays
         """
         # Extract filter parameters
         start_date = filters.get('start_date')
         end_date = filters.get('end_date')
-        city = filters.get('city')
-        weekend = filters.get('weekend', False)
+        cities = filters.get('cities', [])
+        weekdays = filters.get('weekdays', [])  # List of weekday numbers (0-6)
 
         # Get games from repository
         games = self.repository.get_games(
             db,
             start_date=start_date,
             end_date=end_date,
-            cities=[city] if city else None,
-            leagues=None  # Currently not filtering by league
+            cities=cities if cities else None
         )
+
+        # Filter by weekdays if specified
+        if weekdays:
+            games = [
+                game for game in games
+                if datetime.strptime(game['date'], '%Y-%m-%d').weekday() in weekdays
+            ]
 
         # Organize games by date and city
         organized_games = {}
+        city_game_counts = {}  # Track number of games per city
+
         for game in games:
             date = game['date']
             city = game['city']
             
-            # Create date entry if it doesn't exist
+            # Initialize nested structures if they don't exist
             if date not in organized_games:
                 organized_games[date] = {}
-            
-            # Create city entry if it doesn't exist
             if city not in organized_games[date]:
                 organized_games[date][city] = []
             
-            # Add game to the appropriate date and city
-            game_dict = {
-                'id': game['game_id'],
-                'league': game['league'],
-                'date': game['date'],
-                'time': game['time'],
-                'team_away': game['team_away'],
-                'team_home': game['team_home'],
-                'venue': game['venue']
-            }
-            organized_games[date][city].append(game_dict)
+            # Add game to the organization
+            organized_games[date][city].append(game)
+            
+            # Track city game count
+            if city not in city_game_counts:
+                city_game_counts[city] = 0
+            city_game_counts[city] += 1
 
-        return organized_games
+        # Filter out cities with only one game
+        filtered_games = {}
+        for date, cities_dict in organized_games.items():
+            filtered_cities = {
+                city: games_list
+                for city, games_list in cities_dict.items()
+                if city_game_counts[city] > 1
+            }
+            if filtered_cities:  # Only include dates that have cities with multiple games
+                filtered_games[date] = filtered_cities
+
+        return filtered_games

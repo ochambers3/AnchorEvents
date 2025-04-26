@@ -35,12 +35,9 @@ class GameController:
                 JSON response with games organized by date and city
             """
             try:
-                print("Request received")
                 data = request.json
                 db = get_db()
                 games = self.service.get_games(db, data)
-                print("Games retrieved")
-                print(games)
                 return jsonify(games), 200
             except Exception as e:
                 return jsonify({'error': str(e)}), 500

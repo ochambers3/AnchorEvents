@@ -4,14 +4,30 @@ import './App.css';
 function App() {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const [city, setCity] = useState('');
-  const [weekend, setWeekend] = useState(false);
+  const [cities, setCities] = useState('');
+  const [selectedWeekdays, setSelectedWeekdays] = useState([]);
   const [games, setGames] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const handleCheckedChange = () => {
-    setWeekend(!weekend);
+  const weekdays = [
+    { value: 0, label: 'Mon' },
+    { value: 1, label: 'Tue' },
+    { value: 2, label: 'Wed' },
+    { value: 3, label: 'Thu' },
+    { value: 4, label: 'Fri' },
+    { value: 5, label: 'Sat' },
+    { value: 6, label: 'Sun' }
+  ];
+
+  const handleWeekdayChange = (dayValue) => {
+    setSelectedWeekdays(prev => {
+      if (prev.includes(dayValue)) {
+        return prev.filter(d => d !== dayValue);
+      } else {
+        return [...prev, dayValue].sort();
+      }
+    });
   };
 
   const formatDateTime = (dateTimeStr) => {
@@ -32,15 +48,19 @@ function App() {
     setLoading(true);
     setError(null);
     
+    const cityList = cities.split(',')
+      .map(city => city.trim())
+      .filter(city => city.length > 0);
+
     const payload = {
       ...(startDate && { start_date: startDate }),
       ...(endDate && { end_date: endDate }),
-      ...(city && { city }),
-      ...(weekend && { weekend })
+      ...(cityList.length > 0 && { cities: cityList }),
+      ...(selectedWeekdays.length > 0 && { weekdays: selectedWeekdays })
     };
 
     try {
-      const response = await fetch('http://localhost:5000/date-city', {
+      const response = await fetch('http://localhost:5001/date-city', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -88,26 +108,30 @@ function App() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="city">City:</label>
+          <label htmlFor="cities">Cities (comma-separated):</label>
           <input
-            id="city"
+            id="cities"
             type="text"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-            placeholder="Enter city name"
+            value={cities}
+            onChange={(e) => setCities(e.target.value)}
+            placeholder="e.g. Chicago, New York, Boston"
           />
         </div>
 
-        <div className="form-group checkbox-group">
-          <label htmlFor="weekend">
-            <input
-              id="weekend"
-              type="checkbox"
-              checked={weekend}
-              onChange={handleCheckedChange}
-            />
-            Weekend Games Only
-          </label>
+        <div className="form-group weekday-selector">
+          <label>Select Weekdays:</label>
+          <div className="weekday-buttons">
+            {weekdays.map(day => (
+              <button
+                key={day.value}
+                type="button"
+                className={`weekday-button ${selectedWeekdays.includes(day.value) ? 'selected' : ''}`}
+                onClick={() => handleWeekdayChange(day.value)}
+              >
+                {day.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="form-group">
@@ -142,7 +166,7 @@ function App() {
                     <h4>{city}</h4>
                     <div className="games-grid">
                       {cityGames.map((game) => (
-                        <div key={game.id} className="game-card">
+                        <div key={game.game_id} className="game-card">
                           <div className="game-league">{game.league}</div>
                           <div className="game-teams">
                             <div className="team away">{game.team_away}</div>

@@ -5,6 +5,7 @@ function App() {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [cities, setCities] = useState('');
+  const [minGames, setMinGames] = useState(2);
   const [selectedWeekdays, setSelectedWeekdays] = useState([]);
   const [games, setGames] = useState(null);
   const [error, setError] = useState(null);
@@ -77,7 +78,8 @@ function App() {
       ...(startDate && { start_date: startDate }),
       ...(endDate && { end_date: endDate }),
       ...(cityList.length > 0 && { cities: cityList }),
-      ...(selectedWeekdays.length > 0 && { weekdays: selectedWeekdays })
+      ...(selectedWeekdays.length > 0 && { weekdays: selectedWeekdays }),
+      ...(minGames && { min_games: minGames })
     };
 
     try {

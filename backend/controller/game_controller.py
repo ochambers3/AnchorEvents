@@ -29,18 +29,15 @@ class GameController:
             - start_date: Start date for game search (YYYY-MM-DD)
             - end_date: End date for game search (YYYY-MM-DD)
             - city: City name to filter games by
-            - weekend: Boolean to filter for weekend games only
+            - weekdays: List of weekdays to filter games by
             
             Returns:
                 JSON response with games organized by date and city
             """
             try:
-                print("Request received")
                 data = request.json
                 db = get_db()
                 games = self.service.get_games(db, data)
-                print("Games retrieved")
-                print(games)
                 return jsonify(games), 200
             except Exception as e:
                 return jsonify({'error': str(e)}), 500

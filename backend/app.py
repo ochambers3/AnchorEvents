@@ -22,7 +22,7 @@ def create_app():
 def main():
     """Main entry point for the application."""
     app = create_app()
-    app.run(debug=True)
+    app.run(debug=True, port=5000)
 
 
 if __name__ == "__main__":

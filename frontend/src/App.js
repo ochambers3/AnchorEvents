@@ -60,7 +60,7 @@ function App() {
     };
 
     try {
-      const response = await fetch('http://localhost:5001/date-city', {
+      const response = await fetch('http://localhost:5000/date-city', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -30,10 +30,12 @@ class GameController:
             - end_date: End date for game search (YYYY-MM-DD)
             - city: City name to filter games by
             - weekdays: List of weekdays to filter games by
+            - min_games: Minimum number of games in city
             
             Returns:
                 JSON response with games organized by date and city
             """
+            print("request", request.json)
             try:
                 data = request.json
                 db = get_db()

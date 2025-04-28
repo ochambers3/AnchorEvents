@@ -39,8 +39,8 @@ class GameService:
         end_date = filters.get('end_date')
         cities = filters.get('cities', [])
         weekdays = sorted(filters.get('weekdays', []))  # List of weekday numbers (0-6)
-        # min_games = filters.get('min_games', 1)
-        min_games = 3
+        min_games = filters.get('min_games', 1)
+        min_games = int(min_games)
 
         # Get games from repository
         games = self.repository.get_games(

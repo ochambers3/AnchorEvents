@@ -29,7 +29,7 @@ class GameController:
             - start_date: Start date for game search (YYYY-MM-DD)
             - end_date: End date for game search (YYYY-MM-DD)
             - city: City name to filter games by
-            - weekend: Boolean to filter for weekend games only
+            - weekdays: List of weekdays to filter games by
             
             Returns:
                 JSON response with games organized by date and city

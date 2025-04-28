@@ -77,34 +77,45 @@
 }
 
 .weekday-selector {
-  margin-top: 20px;
+  margin: 20px 0;
+}
+
+.weekday-info {
+  font-size: 0.9em;
+  color: #666;
+  margin-bottom: 10px;
 }
 
 .weekday-buttons {
   display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
+  gap: 5px;
+  justify-content: center;
+  margin-top: 10px;
 }
 
 .weekday-button {
   padding: 8px 12px;
-  border: 1px solid #ced4da;
+  border: 2px solid #ddd;
+  background: white;
   border-radius: 4px;
-  background-color: white;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-size: 14px;
-  min-width: 50px;
+  min-width: 60px;
 }
 
 .weekday-button:hover {
-  background-color: #e9ecef;
+  border-color: #007bff;
+  color: #007bff;
 }
 
 .weekday-button.selected {
-  background-color: #007bff;
+  background: #007bff;
   color: white;
-  border-color: #0056b3;
+  border-color: #007bff;
+}
+
+.weekday-button.selected + .weekday-button.selected {
+  border-left-color: #0056b3;
 }
 
 .checkbox-group {
@@ -169,26 +180,36 @@
 
 .results-container {
   margin-top: 30px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .date-section {
-  margin-bottom: 30px;
+  margin-bottom: 40px;
 }
 
 .date-section h3 {
   color: #2c3e50;
+  font-size: 1.8em;
   border-bottom: 2px solid #e9ecef;
   padding-bottom: 10px;
-  margin-bottom: 20px;
-}
-
-.city-section {
   margin-bottom: 25px;
 }
 
+.city-section {
+  margin: 20px 0;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
 .city-section h4 {
-  color: #495057;
-  margin-bottom: 15px;
+  color: #2c3e50;
+  margin: 0 0 15px 0;
+  font-size: 1.4em;
+  font-weight: 600;
 }
 
 .games-grid {
@@ -198,21 +219,27 @@
 }
 
 .game-card {
-  background-color: white;
-  border: 1px solid #e9ecef;
-  border-radius: 8px;
+  background: white;
   padding: 15px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+
+.game-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
 }
 
 .game-league {
-  font-weight: bold;
   color: #007bff;
-  margin-bottom: 10px;
+  font-weight: 600;
+  font-size: 0.9em;
+  margin-bottom: 8px;
 }
 
 .game-teams {
-  margin-bottom: 15px;
+  margin: 10px 0;
   text-align: center;
 }
 
@@ -223,19 +250,21 @@
 .vs {
   color: #6c757d;
   margin: 5px 0;
+  font-size: 0.9em;
 }
 
 .game-details {
-  font-size: 14px;
-  color: #6c757d;
+  margin-top: 10px;
+  font-size: 0.9em;
+  color: #495057;
 }
 
 .game-time {
-  margin-bottom: 5px;
+  margin-bottom: 4px;
 }
 
 .game-venue {
-  font-style: italic;
+  color: #6c757d;
 }
 
 h1 {

@@ -22,11 +22,32 @@ function App() {
 
   const handleWeekdayChange = (dayValue) => {
     setSelectedWeekdays(prev => {
+      // If clicking on an already selected day, deselect it and any days after it
       if (prev.includes(dayValue)) {
-        return prev.filter(d => d !== dayValue);
-      } else {
-        return [...prev, dayValue].sort();
+        return prev.filter(d => d < dayValue);
       }
+      
+      // If no days selected, just add this one
+      if (prev.length === 0) {
+        return [dayValue];
+      }
+      
+      // Find the min and max of currently selected days
+      const min = Math.min(...prev);
+      const max = Math.max(...prev);
+      
+      // If clicking before the range, select all days from click to start of range
+      if (dayValue < min) {
+        return Array.from({ length: min - dayValue + 1 }, (_, i) => dayValue + i);
+      }
+      
+      // If clicking after the range, select all days from end of range to click
+      if (dayValue > max) {
+        return Array.from({ length: dayValue - max + 1 }, (_, i) => max + i);
+      }
+      
+      // If clicking within the range, do nothing
+      return prev;
     });
   };
 
@@ -119,7 +140,8 @@ function App() {
         </div>
 
         <div className="form-group weekday-selector">
-          <label>Select Weekdays:</label>
+          <label>Select Weekday Range:</label>
+          <div className="weekday-info">Select a start and end day to create a range</div>
           <div className="weekday-buttons">
             {weekdays.map(day => (
               <button
@@ -157,12 +179,20 @@ function App() {
         {games && Object.keys(games).length > 0 && (
           <>
             <h2>Game Schedule</h2>
-            {Object.entries(games).sort().map(([date, citiesData]) => (
-              <div key={date} className="date-section">
-                <h3>{new Date(date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</h3>
+            {Object.entries(games).sort().map(([dateRange, citiesData]) => (
+              <div key={dateRange} className="date-section">
+                <h3>{dateRange.includes('(') 
+                  ? dateRange // Week range format
+                  : new Date(dateRange).toLocaleDateString('en-US', { 
+                      weekday: 'long', 
+                      year: 'numeric', 
+                      month: 'long', 
+                      day: 'numeric' 
+                    })
+                }</h3>
                 
-                {Object.entries(citiesData).map(([city, cityGames]) => (
-                  <div key={`${date}-${city}`} className="city-section">
+                {Object.entries(citiesData).sort().map(([city, cityGames]) => (
+                  <div key={`${dateRange}-${city}`} className="city-section">
                     <h4>{city}</h4>
                     <div className="games-grid">
                       {cityGames.map((game) => (

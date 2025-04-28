@@ -16,6 +16,15 @@ class GameService:
         date = datetime.strptime(date_str, '%Y-%m-%d')
         return date.strftime('%Y-%m-%d')
 
+    def format_date(self, date_str):
+        """
+        Takes a date string in 'YYYY-MM-DD' format and returns 'Month Day, Year' format.
+
+        Example: '2024-01-01' -> 'January 1, 2024'
+        """
+        date_obj = datetime.strptime(date_str, '%Y-%m-%d')
+        return date_obj.strftime('%B %-d, %Y')
+
     def get_games(self, db, filters):
         """Get games based on the provided filters.
         
@@ -75,7 +84,8 @@ class GameService:
             
             for game in sorted_games:
                 game_date = datetime.strptime(game['date'], '%Y-%m-%d')
-                week_start = game_date - timedelta(days=game_date.weekday())
+                # Calculate the start of the week containing the selected weekdays
+                week_start = game_date - timedelta(days=game_date.weekday() - weekdays[0])
                 
                 if current_week != week_start:
                     # Process previous week's games if we have any
@@ -101,7 +111,12 @@ class GameService:
                         ]
                         
                         if filtered_week_games:
-                            week_key = f"{weekday_range} ({week_start.strftime('%Y-%m-%d')} - {(week_start + timedelta(days=6)).strftime('%Y-%m-%d')})"
+                            # Use current_week for the date range since we're processing the previous week
+                            start_date = current_week.strftime('%Y-%m-%d')
+                            end_date = (current_week + timedelta(days=len(weekdays)-1)).strftime('%Y-%m-%d')
+                            start = self.format_date(start_date)
+                            end = self.format_date(end_date)
+                            week_key = f"{start} - {end}"
                             result[week_key] = self._organize_by_city(filtered_week_games)
                     
                     # Start new week
@@ -130,7 +145,12 @@ class GameService:
                 ]
                 
                 if filtered_week_games:
-                    week_key = f"{weekday_range} ({current_week.strftime('%Y-%m-%d')} - {(current_week + timedelta(days=6)).strftime('%Y-%m-%d')})"
+                    # Use current_week for the last week as well
+                    start_date = current_week.strftime('%Y-%m-%d')
+                    end_date = (current_week + timedelta(days=len(weekdays)-1)).strftime('%Y-%m-%d')
+                    start = self.format_date(start_date)
+                    end = self.format_date(end_date)
+                    week_key = f"{start} - {end}"
                     result[week_key] = self._organize_by_city(filtered_week_games)
         
         else:

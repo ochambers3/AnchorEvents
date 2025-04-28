@@ -27,14 +27,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-# Things to do:
-# The code, as of now, returns blocks without a gap greater than block_size
-# Raps and Leafs play back to back from 2024-12-01 to 2024-12-07 so this is one "Block"
-# Make city specific/Team specific
-# Differentiate between New York Rangers and New York Islanders
-# Add comments
-
-# If weekend, only return games with more than one game.
-# Print json data well

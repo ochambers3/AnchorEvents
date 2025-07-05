@@ -16,14 +16,42 @@ class GameService:
         date = datetime.strptime(date_str, '%Y-%m-%d')
         return date.strftime('%Y-%m-%d')
 
-    def format_date(self, date_str):
+    def format_date(self, start_date, end_date):
         """
-        Takes a date string in 'YYYY-MM-DD' format and returns 'Month Day, Year' format.
+        Takes two dates in 'YYYY-MM-DD' format and returns relevant format.
 
-        Example: '2024-01-01' -> 'January 1, 2024'
+        # January 8 - 10, 2024
+        # January 8 - February 10, 2024
+        # December 8, 2024 - January 10, 2025
         """
-        date_obj = datetime.strptime(date_str, '%Y-%m-%d')
-        return date_obj.strftime('%B %-d, %Y')
+        date_string = ""
+
+        # Parse each date ONCE
+        start = datetime.strptime(start_date, '%Y-%m-%d')
+        end = datetime.strptime(end_date, '%Y-%m-%d')
+
+        start_year = start.year
+        start_month = start.strftime('%B')  # Full month name like "January"
+        start_day = start.day
+
+        end_year = end.year
+        end_month = end.strftime('%B')      # Full month name like "February"
+        end_day = end.day
+
+        # Logic
+        if start_year == end_year and start_month == end_month:
+            date_string = f"{start_month} {start_day} - {end_day}, {start_year}"
+        elif start_year == end_year and start_month != end_month:
+            date_string = f"{start_month} {start_day} - {end_month} {end_day}, {end_year}"
+        else:  # Different years
+            date_string = f"{start_month} {start_day}, {start_year} - {end_month} {end_day}, {end_year}"
+
+        return date_string
+
+    def format_single_date(self, date):
+        #make date a datetime object
+        date = datetime.strptime(date, '%Y-%m-%d')
+        return date.strftime('%b %d, %Y')
 
     def get_games(self, db, filters):
         """Get games based on the provided filters.
@@ -114,9 +142,10 @@ class GameService:
                             # Use current_week for the date range since we're processing the previous week
                             start_date = current_week.strftime('%Y-%m-%d')
                             end_date = (current_week + timedelta(days=len(weekdays)-1)).strftime('%Y-%m-%d')
-                            start = self.format_date(start_date)
-                            end = self.format_date(end_date)
-                            week_key = f"{start} - {end}"
+                            # start = self.format_date(start_date)
+                            # end = self.format_date(end_date)
+                            # week_key = f"{start} - {end}"
+                            week_key = self.format_date(start_date, end_date)
                             result[week_key] = self._organize_by_city(filtered_week_games)
                     
                     # Start new week
@@ -148,15 +177,18 @@ class GameService:
                     # Use current_week for the last week as well
                     start_date = current_week.strftime('%Y-%m-%d')
                     end_date = (current_week + timedelta(days=len(weekdays)-1)).strftime('%Y-%m-%d')
-                    start = self.format_date(start_date)
-                    end = self.format_date(end_date)
-                    week_key = f"{start} - {end}"
+                    # start = self.format_date(start_date)
+                    # end = self.format_date(end_date)
+                    # week_key = f"{start} - {end}"
+                    week_key = self.format_date(start_date, end_date)
                     result[week_key] = self._organize_by_city(filtered_week_games)
         
         else:
             # Group by individual dates when no weekdays specified
             for date, games_in_date in groupby(sorted_games, key=itemgetter('date')):
                 result[date] = self._organize_by_city(list(games_in_date))
+
+        print(result)
 
         return result
 
@@ -168,3 +200,6 @@ class GameService:
                 city_games[game['city']] = []
             city_games[game['city']].append(game)
         return city_games
+
+#I am sorting by date which puts April first,
+#I need to sort by date and then edit all dates to be what I want.

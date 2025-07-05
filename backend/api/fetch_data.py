@@ -3,13 +3,14 @@ import requests
 class FetchData:
     #   Fetch NBA Schedule
     def fetch_nba_schedule(self):
-        url = "http://data.nba.com/data/10s/v2015/json/mobile_teams/nba/2024/league/00_full_schedule.json"
+        print("Fetching NBA Games")
+        url = "https://cdn.nba.com/static/json/staticData/scheduleLeagueV2_1.json"
         response = requests.get(url)
         return response.json()
     
     #  Fetch NHL Schedule by team.
     def fetch_nhl_schedule_by_team(self):
-        print("Inside fetch nhl schedule by team")
+        print("Fetching NHL Games")
         teams = [
             "ANA", "ARI", "BOS", "BUF", "CGY", "CAR", "CHI", "COL", "CBJ", "DAL", 
             "DET", "EDM", "FLA", "LAK", "MIN", "MTL", "NSH", "NJD", "NYI", "NYR", 
@@ -26,6 +27,7 @@ class FetchData:
     
     #  Fetch NHL Schedule by team.
     def fetch_nfl_schedule_by_team(self):
+        print("Fetching NFL Games")
         teams = [
             "ARI", "ATL", "BAL", "BUF", "CAR", "CHI", "CIN", "CLE", "DAL", "DEN", 
             "DET", "GB", "HOU", "IND", "JAX", "KC", "LV", "LAC", "LAR", "MIA", 
@@ -35,7 +37,7 @@ class FetchData:
 
         nfl_schedule = []
         for team in teams:
-            url = f"http://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/{team}/schedule?season=2024"
+            url = f"http://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/{team}/schedule?season=2025"
             response = requests.get(url)
             nfl_schedule += response.json().get('events', [])
         return nfl_schedule

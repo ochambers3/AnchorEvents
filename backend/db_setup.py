@@ -21,7 +21,7 @@ def init_db():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute('''
-        CREATE TABLE IF NOT EXISTS games (
+        CREATE TABLE IF NOT EXISTS events (
             game_id INTEGER PRIMARY KEY,
             league TEXT,
             date DATE,

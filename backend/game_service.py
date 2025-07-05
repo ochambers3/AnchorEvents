@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from repository.game_repository import GameRepository
+from game_repository import GameRepository
 from itertools import groupby
 from operator import itemgetter
 
@@ -53,7 +53,7 @@ class GameService:
         date = datetime.strptime(date, '%Y-%m-%d')
         return date.strftime('%b %d, %Y')
 
-    def get_games(self, db, filters):
+    def get_events(self, db, filters):
         """Get games based on the provided filters.
         
         Args:
@@ -80,7 +80,7 @@ class GameService:
         min_games = int(min_games)
 
         # Get games from repository
-        games = self.repository.get_games(
+        games = self.repository.get_events(
             db,
             start_date=start_date,
             end_date=end_date,

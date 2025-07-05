@@ -3,7 +3,7 @@ from flask import g
 import os
 
 # Define the path to the database file in the database directory at the project root level
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # Go up one level from backend/
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # Go up one level from backend/
 # print(BASE_DIR)
 DB_PATH = os.path.join(BASE_DIR, 'database', 'schedule.db')
 # print(DB_PATH)

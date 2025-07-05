@@ -1,5 +1,5 @@
 from api.fetch_data import FetchData
-from repository.game_repository import GameRepository
+from game_repository import GameRepository
 from datetime import datetime, timedelta, date
 from api.team_names import get_team_name
 

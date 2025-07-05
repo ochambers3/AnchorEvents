@@ -1,10 +1,10 @@
 import sqlite3
 from flask import Flask, g
 from flask_cors import CORS
-from controller.game_controller import GameController
+from game_controller import GameController
 from utils.db import close_db
 from api.filter_data import FilterData
-from repository.db_setup import init_db
+from db_setup import init_db
 
 def create_app():
     """Create and configure the Flask application."""

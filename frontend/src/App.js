@@ -194,8 +194,8 @@ function App() {
             <h2>Game Schedule</h2>
             {Object.entries(games).sort().map(([dateRange, citiesData]) => (
               <div key={dateRange} className="date-section">
-                <h3>{dateRange.includes('(') 
-                  ? dateRange // Week range format
+                <h3>{dateRange.includes('-') 
+                  ? dateRange // Already formatted date range
                   : new Date(dateRange).toLocaleDateString('en-US', { 
                       weekday: 'long', 
                       year: 'numeric', 

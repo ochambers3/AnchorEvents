@@ -1,5 +1,5 @@
 from flask import g
-from repository.db_setup import init_db
+from db_setup import init_db
 
 def get_db():
     """Get the database connection for the current request."""

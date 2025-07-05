@@ -3,7 +3,7 @@ from typing import List, Dict, Any, Optional
 
 class GameRepository:
     def save_schedule(self, league: str, schedule: List[Dict[str, Any]], db: sqlite3.Connection) -> None:
-        """Save a list of games for a specific league to the database.
+        """Save a list of events for a specific league to the database.
         
         Args:
             league: The sports league identifier (e.g., 'NHL', 'NBA')
@@ -13,7 +13,7 @@ class GameRepository:
         cursor = db.cursor()
         for game in schedule:
             cursor.execute('''
-                INSERT OR IGNORE INTO games (game_id, league, date, time, team_away, team_home, venue, city)
+                INSERT OR IGNORE INTO events (game_id, league, date, time, team_away, team_home, venue, city)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             ''', (game['id'], league, game['date'], game['time'], 
                   game['awayTeam'], 
@@ -22,12 +22,12 @@ class GameRepository:
                   game['city']))
         db.commit()
 
-    def get_games(self, db: sqlite3.Connection, 
+    def get_events(self, db: sqlite3.Connection, 
                  start_date: Optional[str] = None, 
                  end_date: Optional[str] = None, 
                  cities: Optional[List[str]] = None, 
                  leagues: Optional[List[str]] = None) -> List[Dict[str, Any]]:
-        """Retrieve games from the database based on specified filters.
+        """Retrieve events from the database based on specified filters.
         
         Args:
             db: SQLite database connection
@@ -39,7 +39,7 @@ class GameRepository:
         Returns:
             List of game records matching the specified criteria
         """
-        query_parts = ["SELECT * FROM games WHERE 1=1"]
+        query_parts = ["SELECT * FROM events WHERE 1=1"]
         params = []
 
         if start_date:

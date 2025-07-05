@@ -1,5 +1,5 @@
 from api.fetch_data import FetchData
-from repository.game_repository import GameRepository
+from game_repository import GameRepository
 from datetime import datetime, timedelta, date
 from api.team_names import get_team_name
 
@@ -35,23 +35,26 @@ class FilterData:
     def nba_filter(self):
         nba_schedule = self.data.fetch_nba_schedule()
         nba_games = []
-        for lscd_item in nba_schedule['lscd']:
-            mscd = lscd_item['mscd']
-            # month = mscd['mon']  # Extract the month
-            games = mscd['g']    # List of games in that month
 
+        league_schedule = nba_schedule['leagueSchedule']
+        game_dates = league_schedule['gameDates']
+        
+        for game_date_item in game_dates:
+            games = game_date_item['games']  # List of games for this date
+            
             for game in games:
                 myGame = {}
-                myGame['id'] = game["gid"]
-                myGame['date'] = game["gdte"]
-                #local time
-                myGame['time'] = game['htm']
-                myGame['awayTeam'] = game["v"]["tc"] + " " + game["v"]["tn"]
-                myGame['homeTeam'] = game["h"]["tc"] + " " + game["h"]["tn"]
-                myGame['venue'] = game["an"]
-                myGame['city'] = game["ac"]
+                myGame['id'] = game["gameId"]
+                myGame['date'] = game["gameDateEst"][:10]
+                # gmany other game time options
+                myGame['time'] = game['homeTeamTime']
+                myGame['awayTeam'] = game["awayTeam"]["teamCity"] + " " + game["awayTeam"]["teamName"]
+                myGame['homeTeam'] = game["homeTeam"]["teamCity"] + " " + game["homeTeam"]["teamName"]
+                myGame['venue'] = game["arenaName"]
+                myGame['city'] = game["arenaCity"]
                 nba_games.append(myGame)
-            self.repository.save_schedule("NBA", nba_games, self.db)
+        
+        self.repository.save_schedule("NBA", nba_games, self.db)
 
     def nfl_filter(self):
         nfl_schedule = self.data.fetch_nfl_schedule_by_team()

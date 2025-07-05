@@ -1,6 +1,6 @@
 from flask import request, jsonify
 from datetime import datetime
-from service.game_service import GameService
+from game_service import GameService
 from utils.db import get_db
 
 
@@ -22,7 +22,7 @@ class GameController:
         
         #Route using today's date and city. Default start-date is today.
         @self.app.route('/date-city', methods=['POST'])
-        def get_games():
+        def get_events():
             """Handle POST requests to /date-city endpoint.
             
             Expects JSON payload with optional fields:
@@ -39,7 +39,7 @@ class GameController:
             try:
                 data = request.json
                 db = get_db()
-                games = self.service.get_games(db, data)
+                games = self.service.get_events(db, data)
                 return jsonify(games), 200
             except Exception as e:
                 return jsonify({'error': str(e)}), 500

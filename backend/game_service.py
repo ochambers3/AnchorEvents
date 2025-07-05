@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from repository.game_repository import GameRepository
+from game_repository import GameRepository
 from itertools import groupby
 from operator import itemgetter
 
@@ -16,7 +16,44 @@ class GameService:
         date = datetime.strptime(date_str, '%Y-%m-%d')
         return date.strftime('%Y-%m-%d')
 
-    def get_games(self, db, filters):
+    def format_date(self, start_date, end_date):
+        """
+        Takes two dates in 'YYYY-MM-DD' format and returns relevant format.
+
+        # January 8 - 10, 2024
+        # January 8 - February 10, 2024
+        # December 8, 2024 - January 10, 2025
+        """
+        date_string = ""
+
+        # Parse each date ONCE
+        start = datetime.strptime(start_date, '%Y-%m-%d')
+        end = datetime.strptime(end_date, '%Y-%m-%d')
+
+        start_year = start.year
+        start_month = start.strftime('%B')  # Full month name like "January"
+        start_day = start.day
+
+        end_year = end.year
+        end_month = end.strftime('%B')      # Full month name like "February"
+        end_day = end.day
+
+        # Logic
+        if start_year == end_year and start_month == end_month:
+            date_string = f"{start_month} {start_day} - {end_day}, {start_year}"
+        elif start_year == end_year and start_month != end_month:
+            date_string = f"{start_month} {start_day} - {end_month} {end_day}, {end_year}"
+        else:  # Different years
+            date_string = f"{start_month} {start_day}, {start_year} - {end_month} {end_day}, {end_year}"
+
+        return date_string
+
+    def format_single_date(self, date):
+        #make date a datetime object
+        date = datetime.strptime(date, '%Y-%m-%d')
+        return date.strftime('%b %d, %Y')
+
+    def get_events(self, db, filters):
         """Get games based on the provided filters.
         
         Args:
@@ -43,7 +80,7 @@ class GameService:
         min_games = int(min_games)
 
         # Get games from repository
-        games = self.repository.get_games(
+        games = self.repository.get_events(
             db,
             start_date=start_date,
             end_date=end_date,
@@ -75,7 +112,8 @@ class GameService:
             
             for game in sorted_games:
                 game_date = datetime.strptime(game['date'], '%Y-%m-%d')
-                week_start = game_date - timedelta(days=game_date.weekday())
+                # Calculate the start of the week containing the selected weekdays
+                week_start = game_date - timedelta(days=game_date.weekday() - weekdays[0])
                 
                 if current_week != week_start:
                     # Process previous week's games if we have any
@@ -101,7 +139,13 @@ class GameService:
                         ]
                         
                         if filtered_week_games:
-                            week_key = f"{weekday_range} ({week_start.strftime('%Y-%m-%d')} - {(week_start + timedelta(days=6)).strftime('%Y-%m-%d')})"
+                            # Use current_week for the date range since we're processing the previous week
+                            start_date = current_week.strftime('%Y-%m-%d')
+                            end_date = (current_week + timedelta(days=len(weekdays)-1)).strftime('%Y-%m-%d')
+                            # start = self.format_date(start_date)
+                            # end = self.format_date(end_date)
+                            # week_key = f"{start} - {end}"
+                            week_key = self.format_date(start_date, end_date)
                             result[week_key] = self._organize_by_city(filtered_week_games)
                     
                     # Start new week
@@ -130,13 +174,21 @@ class GameService:
                 ]
                 
                 if filtered_week_games:
-                    week_key = f"{weekday_range} ({current_week.strftime('%Y-%m-%d')} - {(current_week + timedelta(days=6)).strftime('%Y-%m-%d')})"
+                    # Use current_week for the last week as well
+                    start_date = current_week.strftime('%Y-%m-%d')
+                    end_date = (current_week + timedelta(days=len(weekdays)-1)).strftime('%Y-%m-%d')
+                    # start = self.format_date(start_date)
+                    # end = self.format_date(end_date)
+                    # week_key = f"{start} - {end}"
+                    week_key = self.format_date(start_date, end_date)
                     result[week_key] = self._organize_by_city(filtered_week_games)
         
         else:
             # Group by individual dates when no weekdays specified
             for date, games_in_date in groupby(sorted_games, key=itemgetter('date')):
                 result[date] = self._organize_by_city(list(games_in_date))
+
+        print(result)
 
         return result
 
@@ -148,3 +200,6 @@ class GameService:
                 city_games[game['city']] = []
             city_games[game['city']].append(game)
         return city_games
+
+#I am sorting by date which puts April first,
+#I need to sort by date and then edit all dates to be what I want.

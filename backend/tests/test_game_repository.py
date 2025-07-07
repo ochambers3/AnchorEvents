@@ -1,7 +1,6 @@
 import pytest
 from game_repository import GameRepository
 
-# Move sample_games inside the test or make it a fixture
 @pytest.fixture
 def sample_games():
     return [

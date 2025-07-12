@@ -41,3 +41,21 @@ class FetchData:
             response = requests.get(url)
             nfl_schedule += response.json().get('events', [])
         return nfl_schedule
+    
+
+    def fetch_ticketmaster_concerts(self, city, start_date, end_date, page=0):
+        print(f"Fetching concerts for {city}, page {page}")
+        api_key = "YOUR_TICKETMASTER_API_KEY"
+        base_url = "https://app.ticketmaster.com/discovery/v2/events.json"
+        params = {
+            "apikey": api_key,
+            "classificationName": "music",
+            "city": city,
+            "countryCode": "US",  # or "CA" depending on city
+            "startDateTime": start_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "endDateTime": end_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "size": 50,
+            "page": page
+        }
+        response = requests.get(base_url, params=params)
+        return response.json()

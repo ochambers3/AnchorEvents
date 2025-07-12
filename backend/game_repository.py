@@ -13,9 +13,9 @@ class GameRepository:
         cursor = db.cursor()
         for game in schedule:
             cursor.execute('''
-                INSERT OR IGNORE INTO events (game_id, league, date, time, team_away, team_home, venue, city)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            ''', (game['id'], league, game['date'], game['time'], 
+                INSERT OR IGNORE INTO events (game_id, league, date, time, artist, team_away, team_home, venue, city)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (game['id'], league, game['date'], game['time'], game['artist'],
                   game['awayTeam'], 
                   game['homeTeam'], 
                   game['venue'], 
@@ -70,6 +70,7 @@ class GameRepository:
             'league': row['league'],
             'date': row['date'],
             'time': row['time'],
+            'artist': row['artist'],
             'team_away': row['team_away'],
             'team_home': row['team_home'],
             'venue': row['venue'],

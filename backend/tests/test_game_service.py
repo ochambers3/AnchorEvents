@@ -8,40 +8,40 @@ class MockRepo:
         # Base test data
         all_events = [
             # Monday 2025-04-14 (weekday 0) - Chicago games
-            {"game_id": 1, "league": "NBA", "date": "2025-04-14", "time": "19:00", "team_away": "Lakers", "team_home": "Bulls", "venue": "United Center", "city": "Chicago"},
-            {"game_id": 2, "league": "NHL", "date": "2025-04-14", "time": "20:00", "team_away": "Blackhawks", "team_home": "Red Wings", "venue": "United Center", "city": "Chicago"},
+            {"game_id": 1, "league": "NBA", "date": "2025-04-14", "time": "19:00", "artist": None, "team_away": "Lakers", "team_home": "Bulls", "venue": "United Center", "city": "Chicago"},
+            {"game_id": 2, "league": "NHL", "date": "2025-04-14", "time": "20:00", "artist": None, "team_away": "Blackhawks", "team_home": "Red Wings", "venue": "United Center", "city": "Chicago"},
             
             # Tuesday 2025-04-15 (weekday 1) - New York games
-            {"game_id": 3, "league": "NBA", "date": "2025-04-15", "time": "19:00", "team_away": "Nets", "team_home": "Knicks", "venue": "Madison Square Garden", "city": "New York"},
-            {"game_id": 4, "league": "NHL", "date": "2025-04-15", "time": "20:00", "team_away": "Rangers", "team_home": "Islanders", "venue": "MSG", "city": "New York"},
+            {"game_id": 3, "league": "NBA", "date": "2025-04-15", "time": "19:00", "artist": None, "team_away": "Nets", "team_home": "Knicks", "venue": "Madison Square Garden", "city": "New York"},
+            {"game_id": 4, "league": "NHL", "date": "2025-04-15", "time": "20:00", "artist": None, "team_away": "Rangers", "team_home": "Islanders", "venue": "MSG", "city": "New York"},
             
             # Wednesday 2025-04-16 (weekday 2) - Chicago game
-            {"game_id": 5, "league": "NBA", "date": "2025-04-16", "time": "19:30", "team_away": "Celtics", "team_home": "Bulls", "venue": "United Center", "city": "Chicago"},
+            {"game_id": 5, "league": "NBA", "date": "2025-04-16", "time": "19:30", "artist": None, "team_away": "Celtics", "team_home": "Bulls", "venue": "United Center", "city": "Chicago"},
             
             # Thursday 2025-04-17 (weekday 3) - New York game
-            {"game_id": 6, "league": "NHL", "date": "2025-04-17", "time": "19:00", "team_away": "Devils", "team_home": "Rangers", "venue": "MSG", "city": "New York"},
+            {"game_id": 6, "league": "NHL", "date": "2025-04-17", "time": "19:00", "artist": None, "team_away": "Devils", "team_home": "Rangers", "venue": "MSG", "city": "New York"},
             
             # Friday 2025-04-18 (weekday 4) - Boston game (single game, should be filtered out)
-            {"game_id": 7, "league": "NBA", "date": "2025-04-18", "time": "20:00", "team_away": "76ers", "team_home": "Celtics", "venue": "TD Garden", "city": "Boston"},
+            {"game_id": 7, "league": "NBA", "date": "2025-04-18", "time": "20:00", "artist": None, "team_away": "76ers", "team_home": "Celtics", "venue": "TD Garden", "city": "Boston"},
             
             # Saturday 2025-04-19 (weekday 5) - Los Angeles games
-            {"game_id": 8, "league": "NBA", "date": "2025-04-19", "time": "20:30", "team_away": "Warriors", "team_home": "Lakers", "venue": "Crypto.com Arena", "city": "Los Angeles"},
-            {"game_id": 9, "league": "NHL", "date": "2025-04-19", "time": "19:00", "team_away": "Ducks", "team_home": "Kings", "venue": "Crypto.com Arena", "city": "Los Angeles"},
+            {"game_id": 8, "league": "NBA", "date": "2025-04-19", "time": "20:30", "artist": None, "team_away": "Warriors", "team_home": "Lakers", "venue": "Crypto.com Arena", "city": "Los Angeles"},
+            {"game_id": 9, "league": "NHL", "date": "2025-04-19", "time": "19:00", "artist": None, "team_away": "Ducks", "team_home": "Kings", "venue": "Crypto.com Arena", "city": "Los Angeles"},
             
             # Sunday 2025-04-20 (weekday 6) - Los Angeles games
-            {"game_id": 10, "league": "NBA", "date": "2025-04-20", "time": "18:00", "team_away": "Clippers", "team_home": "Lakers", "venue": "Crypto.com Arena", "city": "Los Angeles"},
-            {"game_id": 11, "league": "NHL", "date": "2025-04-20", "time": "19:30", "team_away": "Sharks", "team_home": "Kings", "venue": "Crypto.com Arena", "city": "Los Angeles"},
+            {"game_id": 10, "league": "NBA", "date": "2025-04-20", "time": "18:00", "artist": None, "team_away": "Clippers", "team_home": "Lakers", "venue": "Crypto.com Arena", "city": "Los Angeles"},
+            {"game_id": 11, "league": "NHL", "date": "2025-04-20", "time": "19:30", "artist": None, "team_away": "Sharks", "team_home": "Kings", "venue": "Crypto.com Arena", "city": "Los Angeles"},
             
             # Monday 2025-04-21 (weekday 0) - Los Angeles games (for wrap-around test)
-            {"game_id": 12, "league": "NBA", "date": "2025-04-21", "time": "19:00", "team_away": "Suns", "team_home": "Lakers", "venue": "Crypto.com Arena", "city": "Los Angeles"},
-            {"game_id": 13, "league": "NHL", "date": "2025-04-21", "time": "20:00", "team_away": "Golden Knights", "team_home": "Kings", "venue": "Crypto.com Arena", "city": "Los Angeles"},
+            {"game_id": 12, "league": "NBA", "date": "2025-04-21", "time": "19:00", "artist": None, "team_away": "Suns", "team_home": "Lakers", "venue": "Crypto.com Arena", "city": "Los Angeles"},
+            {"game_id": 13, "league": "NHL", "date": "2025-04-21", "time": "20:00", "artist": None, "team_away": "Golden Knights", "team_home": "Kings", "venue": "Crypto.com Arena", "city": "Los Angeles"},
             
             # Tuesday 2025-04-22 (weekday 1) - Los Angeles games (for wrap-around test)
-            {"game_id": 14, "league": "NBA", "date": "2025-04-22", "time": "19:30", "team_away": "Jazz", "team_home": "Lakers", "venue": "Crypto.com Arena", "city": "Los Angeles"},
+            {"game_id": 14, "league": "NBA", "date": "2025-04-22", "time": "19:30", "artist": None, "team_away": "Jazz", "team_home": "Lakers", "venue": "Crypto.com Arena", "city": "Los Angeles"},
             
             # A future week - Chicago games (for multiple week test)
-            {"game_id": 15, "league": "NBA", "date": "2025-04-28", "time": "19:00", "team_away": "Heat", "team_home": "Bulls", "venue": "United Center", "city": "Chicago"},
-            {"game_id": 16, "league": "NHL", "date": "2025-04-29", "time": "20:00", "team_away": "Lightning", "team_home": "Blackhawks", "venue": "United Center", "city": "Chicago"},
+            {"game_id": 15, "league": "NBA", "date": "2025-04-28", "time": "19:00", "artist": None, "team_away": "Heat", "team_home": "Bulls", "venue": "United Center", "city": "Chicago"},
+            {"game_id": 16, "league": "NHL", "date": "2025-04-29", "time": "20:00", "artist": None, "team_away": "Lightning", "team_home": "Blackhawks", "venue": "United Center", "city": "Chicago"},
         ]
         
         # Apply filters just like the real repository would

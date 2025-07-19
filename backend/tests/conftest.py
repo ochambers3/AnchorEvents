@@ -45,12 +45,14 @@ def test_db():
     cursor = conn.cursor()
     cursor.execute('''
         CREATE TABLE events (
-            game_id INTEGER PRIMARY KEY,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            event_id TEXT NOT NULL UNIQUE,
             league TEXT NOT NULL,
-            date DATE NOT NULL,
-            time DATETIME,
-            team_away TEXT NOT NULL,
-            team_home TEXT NOT NULL,
+            date TEXT,
+            time TEXT,
+            artist TEXT,
+            team_away TEXT,
+            team_home TEXT,
             venue TEXT,
             city TEXT,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,

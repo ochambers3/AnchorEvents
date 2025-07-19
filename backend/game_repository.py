@@ -13,9 +13,9 @@ class GameRepository:
         cursor = db.cursor()
         for game in schedule:
             cursor.execute('''
-                INSERT OR IGNORE INTO events (game_id, league, date, time, artist, team_away, team_home, venue, city)
+                INSERT OR IGNORE INTO events (event_id, league, "date", "time", artist, team_away, team_home, venue, city)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ''', (game['id'], league, game['date'], game['time'], game['artist'],
+            ''', (game['event_id'], league, game['date'], game['time'], game['artist'],
                   game['awayTeam'], 
                   game['homeTeam'], 
                   game['venue'], 
@@ -66,7 +66,7 @@ class GameRepository:
         
         # Convert SQLite Row objects to dictionaries
         return [{
-            'game_id': row['game_id'],
+            'event_id': row['event_id'],
             'league': row['league'],
             'date': row['date'],
             'time': row['time'],

@@ -34,10 +34,11 @@ def init_db():
     
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS events (
-            game_id INTEGER PRIMARY KEY,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            event_id TEXT NOT NULL UNIQUE,
             league TEXT NOT NULL,
-            date DATE NOT NULL,
-            time DATETIME,
+            date TEXT,
+            time TEXT,
             artist TEXT,
             team_away TEXT,
             team_home TEXT,

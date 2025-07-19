@@ -3,53 +3,103 @@ from api.filter_data import FilterData
 from unittest.mock import MagicMock
 from datetime import datetime
 
-# @pytest.fixture
-# def fake_db():
-#     # Replace with a mock or in-memory SQLite if needed
-#     return MagicMock()
+@pytest.fixture
+def fake_db():
+    return MagicMock()
 
-def test_ticketmaster_filter_with_mock_data(db, sample_concert_data):
+def test_ticketmaster_filter_with_mock_data(fake_db, sample_concert_data):
+    """Unit test - tests the filtering logic without database dependency"""
     # Setup
-    filter_data = FilterData(db)
+    filter_data = FilterData(fake_db)
     filter_data.data.fetch_ticketmaster_concerts = MagicMock(return_value=sample_concert_data)
 
-    # Mock save_schedule to inspect what gets stored
+    # Mock save_schedule to capture what would be saved
     captured = []
-    filter_data.repository.save_schedule = lambda name, data, db: captured.extend(data)
+    def mock_save_schedule(name, data, db):
+        print(f"Mock save_schedule called with:")
+        print(f"  name: {name}")
+        print(f"  data: {data}")
+        print(f"  db: {db}")
+        for item in data:
+            print(f"  Item types: {[(k, type(v)) for k, v in item.items()]}")
+        captured.extend(data)
+    
+    filter_data.repository.save_schedule = mock_save_schedule
 
     # Call the filter method
     filter_data.ticketmaster_concert_filter(["Toronto"])
-    print(captured)
+    
+    print("=== CAPTURED DATA ===")
+    for i, concert in enumerate(captured):
+        print(f"Concert {i}:")
+        for key, value in concert.items():
+            print(f"  {key}: {value} (type: {type(value)})")
 
-    # Assertions
+    # Assertions - test the data transformation logic
     assert len(captured) == 1
     concert = captured[0]
     assert concert['artist'] == "Taylor Swift"
     assert concert['venue'] == "Scotiabank Arena"
     assert concert['city'] == "Toronto"
-    assert concert['country'] == "Canada"
-    assert concert['start_time'] == "19:30"
+    
+    # Debug the failing assertion
+    print(f"concert['time'] = {concert['time']} (type: {type(concert['time'])})")
+    print(f"concert['date'] = {concert['date']} (type: {type(concert['date'])})")
+    
+    # The actual assertions
+    assert concert['time'] == "2025-11-20T19:30:00"
+    assert concert['date'] == "2025-11-20"
+    assert isinstance(concert['time'], str)
+    assert isinstance(concert['date'], str)
 
 def test_ticketmaster_filter_saves_concerts(test_db, sample_concert_data):
+    """Integration test - tests the complete flow including database storage"""
     filter_data = FilterData(test_db)
 
     # Mock the fetch method to return our static JSON
     filter_data.data.fetch_ticketmaster_concerts = MagicMock(return_value=sample_concert_data)
 
-    # Call the method
-    filter_data.ticketmaster_concert_filter(["Toronto"])
+    # Add debug logging to the actual repository method
+    original_save_schedule = filter_data.repository.save_schedule
+    
+    def debug_save_schedule(league, schedule, db):
+        print(f"=== DEBUG SAVE_SCHEDULE ===")
+        print(f"League: {league}")
+        print(f"Schedule length: {len(schedule)}")
+        for i, game in enumerate(schedule):
+            print(f"Game {i}:")
+            for key, value in game.items():
+                print(f"  {key}: {value} (type: {type(value)})")
+        
+        # Call the original method
+        return original_save_schedule(league, schedule, db)
+    
+    filter_data.repository.save_schedule = debug_save_schedule
 
-    # Read the DB
+    # Call the method - this will actually save to database
+    try:
+        filter_data.ticketmaster_concert_filter(["Toronto"])
+        print("✅ No exception thrown during save")
+    except Exception as e:
+        print(f"❌ Exception during save: {e}")
+        import traceback
+        traceback.print_exc()
+        raise
+
+    # Read the DB to verify data was stored correctly
     cursor = test_db.cursor()
     cursor.execute("SELECT * FROM events")
     rows = cursor.fetchall()
 
     # Print to visually verify
-    print("Inserted rows:")
+    print("=== INSERTED ROWS ===")
     for row in rows:
         print(dict(row))
 
+    # Assertions - test that data was stored correctly
     assert len(rows) == 1
     assert rows[0]["venue"] == "Scotiabank Arena"
     assert rows[0]["city"] == "Toronto"
     assert rows[0]["league"] == "Concert"
+    assert rows[0]["date"] == "2025-11-20"
+    assert rows[0]["time"] == "2025-11-20T19:30:00"

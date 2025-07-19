@@ -278,8 +278,9 @@ class GameService:
         for event in events:
             event_date = datetime.strptime(event['date'], '%Y-%m-%d')
             formatted_event = {
-                'id': f"event_{event['game_id']}",
-                'type': event['league'],
+                'id': event['id'],
+                'event_id': f"event_{event['event_id']}",
+                'league': event['league'],
                 'team': f"{event['team_away']} vs {event['team_home']}" if event['team_away'] and event['team_home'] else 'TBD',
                 'venue': event['venue'],
                 'date': event['date'],

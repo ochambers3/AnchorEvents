@@ -6,6 +6,7 @@ def sample_games():
     return [
         {
             'id': 1,
+            'event_id': 'one',
             'date': '2025-04-13',
             'time': '19:00',
             'artist': None,
@@ -16,6 +17,7 @@ def sample_games():
         },
         {
             'id': 2,
+            'event_id': 'two',
             'date': '2025-04-13',
             'time': '20:00',
             'artist': None,
@@ -26,6 +28,7 @@ def sample_games():
         },
         {
             'id': 3,
+            'event_id': 'three',
             'date': '2025-04-14',
             'time': '19:30',
             'artist': None,

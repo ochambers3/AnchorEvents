@@ -14,7 +14,7 @@ class FilterData:
         nhl_games = []
         for game in nhl_schedule:
             myGame = {}
-            myGame['id'] = game['id']
+            myGame['event_id'] = game['id']
             myGame['date'] = game['gameDate']
             utc_time = game['startTimeUTC']
             local_offset = game['venueUTCOffset']
@@ -45,7 +45,7 @@ class FilterData:
             
             for game in games:
                 myGame = {}
-                myGame['id'] = game["gameId"]
+                myGame['event_id'] = game["gameId"]
                 myGame['date'] = game["gameDateEst"][:10]
                 myGame['artist'] = None
                 # gmany other game time options
@@ -63,7 +63,7 @@ class FilterData:
         nfl_games = []
         for game in nfl_schedule:
             myGame = {}
-            myGame['id'] = game['id']
+            myGame['event_id'] = game['id']
             date = game['date'][:10]
             #my_date = datetime.strptime(date, "%Y-%m-%d")
             myGame['date'] = date
@@ -105,18 +105,48 @@ class FilterData:
 
                 for e in events:
                     try:
+                        date_str = e['dates']['start']['localDate']
+                        time_str = e['dates']['start'].get('localTime')
+                        
+                        # Create a consistent datetime object
+                        date_obj = datetime.strptime(date_str, "%Y-%m-%d").date()
+                        
+                        if time_str:
+                            # Try different time formats
+                            try:
+                                # Try with seconds first
+                                time_obj = datetime.strptime(time_str, "%H:%M:%S").time()
+                            except ValueError:
+                                # Try without seconds
+                                time_obj = datetime.strptime(time_str, "%H:%M").time()
+                        else:
+                            # Default to midnight if no time provided
+                            time_obj = datetime.strptime("00:00:00", "%H:%M:%S").time()
+                        
+                        # Combine date and time into a single datetime object
+                        datetime_obj = datetime.combine(date_obj, time_obj)
+                        
+                        # IMPORTANT: Convert to strings for database storage
+                        date_string = date_obj.isoformat()  # "2025-11-20"
+                        datetime_string = datetime_obj.isoformat()  # "2025-11-20T19:30:00"
+                        
+                        print("DATE: ", date_obj.isoformat())
+                        print("TIME: ", datetime_obj.isoformat())
+                        print(type(date_obj.isoformat()), type(datetime_obj.isoformat()))
+                        
                         concert = {
-                            'id': e['id'],
+                            'event_id': e['id'],
                             'artist': e['name'],
-                            'date': e['dates']['start']['localDate'],
-                            'time': e['dates']['start'].get('localTime', None),
-                            # 'end_time': e['dates'].get('end', {}).get('localTime', None),
+                            'date': date_str,  # Convert to string
+                            'time': datetime_string,  # Convert to string
                             'homeTeam': None,
                             'awayTeam': None,
                             'venue': e['_embedded']['venues'][0]['name'],
                             'city': e['_embedded']['venues'][0]['city']['name'],
-                            # 'country': e['_embedded']['venues'][0]['country']['name']
                         }
+                        print('Concert: ', concert)
+                        for item in concert:
+                            print(item, type(item))
                         concerts.append(concert)
                     except Exception as ex:
                         print("Skipping event due to error:", ex)

@@ -52,6 +52,7 @@ def populate_initial_data():
         api.nba_filter()
         api.nhl_filter()
         api.nfl_filter()
+        api.ticketmaster_concert_filter(['New York', 'Chicago', 'Dallas', 'Los Angeles', 'Miami', 'Boston', 'Nashville'], 3)
 
 def main():
     """Main entry point for the application."""

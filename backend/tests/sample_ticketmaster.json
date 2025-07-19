@@ -1,0 +1,32 @@
+{
+    "_embedded": {
+      "events": [
+        {
+          "id": "1Ab234",
+          "name": "Taylor Swift",
+          "dates": {
+            "start": {
+              "localDate": "2025-11-20",
+              "localTime": "19:30"
+            }
+          },
+          "end": {
+            "localTime": "22:00"
+          },
+          "_embedded": {
+            "venues": [
+              {
+                "name": "Scotiabank Arena",
+                "city": { "name": "Toronto" },
+                "country": { "name": "Canada" }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "page": {
+      "number": 0,
+      "totalPages": 1
+    }
+}

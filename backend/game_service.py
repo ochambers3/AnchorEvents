@@ -88,7 +88,7 @@ class GameService:
             ]
 
         # Sort events by date and time
-        sorted_events = sorted(events, key=lambda x: (x['date'], x['time']))
+        sorted_events = sorted(events, key=lambda x: (x['date'], x['start_time']))
 
         if not sorted_events:
             return {"itineraries": []}
@@ -263,7 +263,7 @@ class GameService:
     def _create_itinerary(self, events, city):
         """Create an itinerary object from a list of events."""
         # Sort events by date and time
-        events.sort(key=lambda x: (x['date'], x['time']))
+        events.sort(key=lambda x: (x['date'], x['start_time']))
         
         start_date = events[0]['date']
         end_date = events[-1]['date']
@@ -278,12 +278,16 @@ class GameService:
         for event in events:
             event_date = datetime.strptime(event['date'], '%Y-%m-%d')
             formatted_event = {
-                'id': f"event_{event['game_id']}",
-                'type': event['league'],
+                'id': event['id'],
+                'event_id': f"event_{event['event_id']}",
+                'type': event['type'],
+                'league': event['league'],
+                'artist': event['artist'],
                 'team': f"{event['team_away']} vs {event['team_home']}" if event['team_away'] and event['team_home'] else 'TBD',
                 'venue': event['venue'],
                 'date': event['date'],
-                'time': event['time'],
+                'start_time': event['start_time'],
+                'end_time': event['end_time'],
                 'day_of_week': event_date.strftime('%A'),
                 'formatted_date': self.format_single_date(event['date'])
             }

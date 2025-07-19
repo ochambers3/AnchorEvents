@@ -2,24 +2,23 @@ import sqlite3
 from typing import List, Dict, Any, Optional
 
 class GameRepository:
-    def save_schedule(self, league: str, schedule: List[Dict[str, Any]], db: sqlite3.Connection) -> None:
-        """Save a list of events for a specific league to the database.
+    def save_schedule(self, schedule: List[Dict[str, Any]], db: sqlite3.Connection) -> None:
+        """Save a events to theh db
         
         Args:
-            league: The sports league identifier (e.g., 'NHL', 'NBA')
-            schedule: List of game dictionaries containing game details
+            schedule: List of dictionaries containing event details
             db: SQLite database connection
         """
         cursor = db.cursor()
-        for game in schedule:
+        for event in schedule:
             cursor.execute('''
-                INSERT OR IGNORE INTO events (game_id, league, date, time, team_away, team_home, venue, city)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            ''', (game['id'], league, game['date'], game['time'], 
-                  game['awayTeam'], 
-                  game['homeTeam'], 
-                  game['venue'], 
-                  game['city']))
+                INSERT OR IGNORE INTO events (event_id, type, league, artist, "date", start_time, end_time, team_away, team_home, venue, city)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (event['event_id'], event['type'], event['league'], event['artist'], event['date'], event['start_time'], event['end_time'],
+                  event['awayTeam'], 
+                  event['homeTeam'], 
+                  event['venue'], 
+                  event['city']))
         db.commit()
 
     def get_events(self, db: sqlite3.Connection, 
@@ -66,10 +65,11 @@ class GameRepository:
         
         # Convert SQLite Row objects to dictionaries
         return [{
-            'game_id': row['game_id'],
+            'event_id': row['event_id'],
             'league': row['league'],
             'date': row['date'],
             'time': row['time'],
+            'artist': row['artist'],
             'team_away': row['team_away'],
             'team_home': row['team_home'],
             'venue': row['venue'],

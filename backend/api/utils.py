@@ -1,3 +1,5 @@
+from datetime import timedelta, datetime
+
 team_mapping = {
     "Anaheim": "Ducks",
     "Arizona": "Coyotes",
@@ -34,3 +36,24 @@ team_mapping = {
 
 def get_team_name(city):
     return team_mapping.get(city, "Unknown")
+
+def estimate_end_time(start_time, event_type, league=None):
+    # Default durations (can be adjusted)
+    durations = {
+        'concert': timedelta(hours=2.5),
+        'NBA': timedelta(hours=2.5),
+        'NHL': timedelta(hours=2.5),
+        'NFL': timedelta(hours=3),
+        'MLB': timedelta(hours=3.5),
+        'default_sport': timedelta(hours=2.5),
+    }
+
+    if event_type == 'concert':
+        duration = durations['concert']
+    elif event_type == 'sports':
+        duration = durations.get(league, durations['default_sport'])
+    else:
+        duration = timedelta(hours=2)  # fallback
+
+    end_time = start_time + duration
+    return end_time

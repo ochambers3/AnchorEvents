@@ -5,9 +5,13 @@ from flask import g
 # Define the path to the database file
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DB_PATH = os.path.join(BASE_DIR, 'database', 'schedule.db')
+TEST_DB_OVERRIDE = None
 
 def get_db():
     """Get the database connection for the current request."""
+    if TEST_DB_OVERRIDE:
+        return TEST_DB_OVERRIDE  # ← use test connection if provided'
+
     if 'db' not in g:
         g.db = sqlite3.connect(DB_PATH)
         g.db.row_factory = sqlite3.Row  # Enable dict-like access to rows
@@ -30,12 +34,16 @@ def init_db():
     
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS events (
-            game_id INTEGER PRIMARY KEY,
-            league TEXT NOT NULL,
-            date DATE NOT NULL,
-            time DATETIME,
-            team_away TEXT NOT NULL,
-            team_home TEXT NOT NULL,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            event_id TEXT NOT NULL UNIQUE,
+            type TEXT CHECK(type IN ('concert', 'sports')) NOT NULL,
+            league TEXT,
+            artist TEXT,
+            date TEXT,
+            start_time TEXT,
+            end_time TEXT,
+            team_away TEXT,
+            team_home TEXT,
             venue TEXT,
             city TEXT,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,

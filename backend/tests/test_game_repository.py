@@ -7,8 +7,11 @@ def sample_games():
         {
             'id': 1,
             'event_id': 'one',
+            'type': 'sports',
+            'league': 'NHL',
             'date': '2025-04-13',
-            'time': '19:00',
+            'start_time': '19:00',
+            'end_time': '20:00',
             'artist': None,
             'awayTeam': 'Sharks',
             'homeTeam': 'Jets',
@@ -18,19 +21,25 @@ def sample_games():
         {
             'id': 2,
             'event_id': 'two',
+            'type': 'sports',
+            'league': 'NHL',
             'date': '2025-04-13',
-            'time': '20:00',
+            'start_time': '20:00',
+            'end_time': '21:00',
             'artist': None,
-            'awayTeam': 'Warriors',
-            'homeTeam': 'Lakers',
+            'awayTeam': 'Montreal',
+            'homeTeam': 'Edmonton',
             'venue': 'Chase Center',
             'city': 'San Francisco'
         },
         {
             'id': 3,
             'event_id': 'three',
+            'type': 'sports',
+            'league': 'NHL',
             'date': '2025-04-14',
-            'time': '19:30',
+            'start_time': '19:30',
+            'end_time': '20:00',
             'artist': None,
             'awayTeam': 'Canucks',
             'homeTeam': 'Sharks',
@@ -48,7 +57,7 @@ def test_save_schedule(app, db, sample_games):
         cursor.execute('DELETE FROM events')
         db.commit()
         
-        repo.save_schedule('NHL', sample_games, db)
+        repo.save_schedule(sample_games, db)
         
         saved_games = cursor.execute('SELECT * FROM events').fetchall()
         assert len(saved_games) == len(sample_games)

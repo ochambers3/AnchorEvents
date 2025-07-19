@@ -49,11 +49,11 @@ def populate_initial_data():
     
     if count == 0:  # Only populate if empty
         api = FilterData(db)
-        # api.nba_filter()
+        api.nba_filter()
         # api.nhl_filter()
         # api.nfl_filter()
-        # api.ticketmaster_concert_filter(['New York', 'Chicago', 'Dallas', 'Los Angeles', 'Miami', 'Boston', 'Nashville'])
-        api.ticketmaster_concert_filter(['Dallas'], 1)
+        # api.ticketmaster_concert_filter(['New York', 'Chicago', 'Dallas', 'Los Angeles', 'Miami', 'Boston', 'Nashville'], 3)
+        # api.ticketmaster_concert_filter(['Dallas'], 1)
 
 def main():
     """Main entry point for the application."""

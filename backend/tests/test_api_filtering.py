@@ -1,7 +1,7 @@
 import pytest
 from api.filter_data import FilterData
 from unittest.mock import MagicMock
-from datetime import datetime
+from datetime import datetime, date
 
 @pytest.fixture
 def fake_db():
@@ -15,9 +15,8 @@ def test_ticketmaster_filter_with_mock_data(fake_db, sample_concert_data):
 
     # Mock save_schedule to capture what would be saved
     captured = []
-    def mock_save_schedule(name, data, db):
+    def mock_save_schedule(data, db):
         print(f"Mock save_schedule called with:")
-        print(f"  name: {name}")
         print(f"  data: {data}")
         print(f"  db: {db}")
         for item in data:
@@ -43,13 +42,13 @@ def test_ticketmaster_filter_with_mock_data(fake_db, sample_concert_data):
     assert concert['city'] == "Toronto"
     
     # Debug the failing assertion
-    print(f"concert['time'] = {concert['time']} (type: {type(concert['time'])})")
+    print(f"concert['start_time'] = {concert['start_time']} (type: {type(concert['start_time'])})")
     print(f"concert['date'] = {concert['date']} (type: {type(concert['date'])})")
     
     # The actual assertions
-    assert concert['time'] == "2025-11-20T19:30:00"
+    assert concert['start_time'] == "19:30"
     assert concert['date'] == "2025-11-20"
-    assert isinstance(concert['time'], str)
+    assert isinstance(concert['start_time'], str)
     assert isinstance(concert['date'], str)
 
 def test_ticketmaster_filter_saves_concerts(test_db, sample_concert_data):
@@ -62,9 +61,8 @@ def test_ticketmaster_filter_saves_concerts(test_db, sample_concert_data):
     # Add debug logging to the actual repository method
     original_save_schedule = filter_data.repository.save_schedule
     
-    def debug_save_schedule(league, schedule, db):
+    def debug_save_schedule(schedule, db):
         print(f"=== DEBUG SAVE_SCHEDULE ===")
-        print(f"League: {league}")
         print(f"Schedule length: {len(schedule)}")
         for i, game in enumerate(schedule):
             print(f"Game {i}:")
@@ -72,7 +70,7 @@ def test_ticketmaster_filter_saves_concerts(test_db, sample_concert_data):
                 print(f"  {key}: {value} (type: {type(value)})")
         
         # Call the original method
-        return original_save_schedule(league, schedule, db)
+        return original_save_schedule(schedule, db)
     
     filter_data.repository.save_schedule = debug_save_schedule
 
@@ -100,6 +98,8 @@ def test_ticketmaster_filter_saves_concerts(test_db, sample_concert_data):
     assert len(rows) == 1
     assert rows[0]["venue"] == "Scotiabank Arena"
     assert rows[0]["city"] == "Toronto"
-    assert rows[0]["league"] == "Concert"
+    assert rows[0]["type"] == "concert"
+    assert rows[0]["league"] == None
+    assert rows[0]["artist"] == "Taylor Swift"
     assert rows[0]["date"] == "2025-11-20"
-    assert rows[0]["time"] == "2025-11-20T19:30:00"
+    assert rows[0]["start_time"] == "19:30"

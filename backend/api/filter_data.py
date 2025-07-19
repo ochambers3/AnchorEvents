@@ -55,7 +55,6 @@ class FilterData:
                 date_str = game["homeTeamTime"]
                 date = parser.isoparse(date_str).date()
                 # date = datetime.strptime(date_str, "%Y-%m-%d").date()
-                print("Date Object: ", date, type(date))
                 start_time = isoparse(game["homeTeamTime"])
                 end_time = estimate_end_time(start_time, 'sports', 'NBA')
                 myGame = {}
@@ -83,9 +82,13 @@ class FilterData:
         for game in nfl_schedule:
             myGame = {}
             myGame['event_id'] = game['id']
-            date = game['date'][:10]
+            # date = game['date'][:10]
+            date_str = game['date'][:10]
+            date = parser.isoparse(date_str).date()
+            start_time = dt = datetime.strptime(game['date'], "%Y-%m-%dT%H:%MZ")
+            end_time = estimate_end_time(start_time, 'sports', 'NFL')
             #my_date = datetime.strptime(date, "%Y-%m-%d")
-            myGame['date'] = date
+            myGame['date'] = date.isoformat()
             myGame['artist'] = None
             # utc_time = game['startTimeUTC']
             # local_offset = game['venueUTCOffset']
@@ -95,7 +98,8 @@ class FilterData:
             # seconds_offset = int(local_offset[4:])
             # offset = timedelta(hours=hours_offset, minutes=seconds_offset)
             # myGame['time'] = dt + offset
-            myGame['time'] = game['date']
+            myGame['start_time'] = start_time.time().strftime('%H:%M')
+            myGame['end_time'] = end_time.time().strftime('%H:%M')
             if game['competitions'][0]['competitors'][0]['homeAway'] == "home":
                 myGame['homeTeam'] = game['competitions'][0]['competitors'][0]['team']['displayName']
                 myGame['awayTeam'] = game['competitions'][0]['competitors'][1]['team']['displayName']

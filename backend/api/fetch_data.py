@@ -1,4 +1,7 @@
 import requests
+from datetime import date, timedelta
+from dateutil.relativedelta import relativedelta
+import os
 
 class FetchData:
     #   Fetch NBA Schedule
@@ -44,18 +47,21 @@ class FetchData:
     
 
     def fetch_ticketmaster_concerts(self, city, start_date, end_date, page=0):
-        print(f"Fetching concerts for {city}, page {page}")
-        api_key = "YOUR_TICKETMASTER_API_KEY"
+        print(f"Fetching concerts in US, page {page}")
+        api_key = os.environ.get('TICKETMASTER')
+        print('using api key: ', api_key)
         base_url = "https://app.ticketmaster.com/discovery/v2/events.json"
         params = {
             "apikey": api_key,
             "classificationName": "music",
             "city": city,
             "countryCode": "US",  # or "CA" depending on city
-            "startDateTime": start_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
-            "endDateTime": end_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
-            "size": 50,
+            # "startDateTime": start_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "startDateTime": start_date,
+            "endDateTime": end_date,
+            "size": 1,
             "page": page
         }
         response = requests.get(base_url, params=params)
+        print('found events: ', response.json())
         return response.json()

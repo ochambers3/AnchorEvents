@@ -1,6 +1,6 @@
 from api.fetch_data import FetchData
 from game_repository import GameRepository
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta, date, timezone
 from api.team_names import get_team_name
 
 class FilterData:
@@ -89,16 +89,18 @@ class FilterData:
             nfl_games.append(myGame)
         self.repository.save_schedule("NFL", nfl_games, self.db)
 
-    def ticketmaster_concert_filter(self, cities):
+    def ticketmaster_concert_filter(self, cities, pages):
         print("Filtering Ticketmaster concerts")
         concerts = []
-        start_date = datetime.now()
+        start_date = datetime.now(timezone.utc)
         end_date = start_date + timedelta(days=180)
+        formatted_start_date = start_date.strftime("%Y-%m-%dT%H:%M:%SZ")
+        formatted_end_date = end_date.strftime("%Y-%m-%dT%H:%M:%SZ")
 
         for city in cities:
             page = 0
-            while True:
-                data = self.data.fetch_ticketmaster_concerts(city, start_date, end_date, page)
+            while page < pages:
+                data = self.data.fetch_ticketmaster_concerts(city, formatted_start_date, formatted_end_date, page)
                 events = data.get('_embedded', {}).get('events', [])
                 if not events:
                     break
@@ -112,9 +114,8 @@ class FilterData:
                         date_obj = datetime.strptime(date_str, "%Y-%m-%d").date()
                         
                         if time_str:
-                            # Try different time formats
                             try:
-                                # Try with seconds first
+                                # Try with seconds
                                 time_obj = datetime.strptime(time_str, "%H:%M:%S").time()
                             except ValueError:
                                 # Try without seconds
@@ -122,31 +123,22 @@ class FilterData:
                         else:
                             # Default to midnight if no time provided
                             time_obj = datetime.strptime("00:00:00", "%H:%M:%S").time()
-                        
-                        # Combine date and time into a single datetime object
+
                         datetime_obj = datetime.combine(date_obj, time_obj)
                         
-                        # IMPORTANT: Convert to strings for database storage
-                        date_string = date_obj.isoformat()  # "2025-11-20"
-                        datetime_string = datetime_obj.isoformat()  # "2025-11-20T19:30:00"
-                        
-                        print("DATE: ", date_obj.isoformat())
-                        print("TIME: ", datetime_obj.isoformat())
-                        print(type(date_obj.isoformat()), type(datetime_obj.isoformat()))
+                        date_string = date_obj.isoformat()
+                        datetime_string = datetime_obj.isoformat()
                         
                         concert = {
                             'event_id': e['id'],
                             'artist': e['name'],
-                            'date': date_str,  # Convert to string
-                            'time': datetime_string,  # Convert to string
+                            'date': date_str,
+                            'time': datetime_string,
                             'homeTeam': None,
                             'awayTeam': None,
                             'venue': e['_embedded']['venues'][0]['name'],
                             'city': e['_embedded']['venues'][0]['city']['name'],
                         }
-                        print('Concert: ', concert)
-                        for item in concert:
-                            print(item, type(item))
                         concerts.append(concert)
                     except Exception as ex:
                         print("Skipping event due to error:", ex)
@@ -154,5 +146,7 @@ class FilterData:
                 if "page" not in data or data["page"]["number"] >= data["page"]["totalPages"] - 1:
                     break
                 page += 1
+
+        print('Adding concerts: ', concerts)
 
         self.repository.save_schedule("Concert", concerts, self.db)

@@ -1,0 +1,17 @@
+.app-footer {
+    display: flex;
+    justify-content: space-between;
+    height: 40px;
+    padding: var(--content-padding);
+    box-shadow: 0px 5px 25px var(--shadow-color);
+    background-color: var(--primary-color);
+    align-items: right;
+}
+
+footer {
+    transition: transform 0.3s ease;
+}
+  
+footer.hide {
+    transform: translateY(100%);
+}

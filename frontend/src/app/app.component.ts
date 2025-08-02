@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { HomeComponent } from './features/home/home.component';
 import { HousingLocationComponent } from './features/housing-location/housing-location.component';
 import { RouterModule } from '@angular/router';
@@ -15,35 +15,46 @@ import { FooterComponent } from './layout/footer/footer.component';
       <section class="content">
         <router-outlet></router-outlet>
       </section>
-      @if (showFooter) {
-        <app-footer></app-footer>
-      }
+      <app-footer [class.hidden]="!showFooter()"></app-footer>
     </main>
   `,
   styleUrls: ['./app.component.css', './layout/header/header.component.css'],
-  standalone: true,
+  standalone: true
 })
 export class AppComponent implements OnInit {
-  showFooter = true;
+  showFooter = signal(true);
   private lastScrollTop = 0;
+  private scrollThreshold = 5;
 
   ngOnInit(): void {
-      window.addEventListener('scroll', this.handleScroll, true);
+    window.addEventListener('scroll', this.handleScroll, { passive: true });
+  }
+
+  // cleanup
+  ngOnDestroy(): void {
+    window.removeEventListener('scroll', this.handleScroll);
   }
 
   handleScroll = (): void => {
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const scrollDiff = Math.abs(scrollTop - this.lastScrollTop);
 
-    if (scrollTop > this.lastScrollTop) {
-      // Scrolling down
-      this.showFooter = false;
-    } else {
-      // Scrolling up
-      this.showFooter = true;
+    // Only trigger if scroll difference is above threshold
+    if (scrollDiff < this.scrollThreshold) {
+      return;
     }
 
-    this.lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+    if (scrollTop > this.lastScrollTop && scrollTop > 100) {
+      // Scrolling down and not at top
+      this.showFooter.set(false);
+    } else if (scrollTop < this.lastScrollTop) {
+      // Scrolling up
+      this.showFooter.set(true);
+    }
+
+    this.lastScrollTop = scrollTop;
   };
+
   
   title = 'Anchor Events';
 }

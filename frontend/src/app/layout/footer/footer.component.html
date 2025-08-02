@@ -1,1 +1,7 @@
-<app-footer [ngClass]="{ 'hide': !showFooter }"></app-footer>
+<footer class="app-footer">
+    <button mat-icon-button (click)="doSomething()">
+        <!-- <mat-icon fontSet="fa" fontIcon="fa-github"></mat-icon> -->
+        <i class="fa-brands fa-github" (click)="doSomething()"></i>
+    </button>
+</footer>
+  

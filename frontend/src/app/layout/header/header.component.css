@@ -23,8 +23,8 @@
   
   .nav-links a {
     text-decoration: none;
-    color: var(--secondary-color);
-    font-weight: 200;
+    color: var(--background-light-color);
+    font-weight: 400;
     transition: color 0.2s;
     padding: 3%;
     font-size: large;

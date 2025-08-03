@@ -1,5 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector, Type } from '@angular/core';
 import { HousingLocationInfo } from './housinglocation';
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
 
 @Injectable({
   providedIn: 'root'
@@ -22,5 +24,116 @@ export class HousingService {
     console.log(
       `Homes application received: fistname: ${firstName}, lastName: ${lastName}, email: ${email}.`
     );
+  }
+}
+
+@Injectable({ providedIn: 'root' })
+export class PopupService {
+  private currentOverlayRef: OverlayRef | null = null;
+
+  constructor(private overlay: Overlay, private injector: Injector) {}
+
+  openPopup(component: Type<any>, origin: HTMLElement) {
+    console.log('Inside service open Popup');
+    this.closePopup();
+
+    const positionStrategy = this.overlay.position()
+      .flexibleConnectedTo(origin)
+      .withPositions([
+        { originX: 'end', originY: 'top', overlayX: 'start', overlayY: 'top' },
+        { originX: 'start', originY: 'top', overlayX: 'end', overlayY: 'top' },
+        { originX: 'end', originY: 'bottom', overlayX: 'start', overlayY: 'bottom' },
+        { originX: 'start', originY: 'bottom', overlayX: 'end', overlayY: 'bottom' }
+      ])
+      .withPush(true);
+
+    console.log('Postioin strategy: ', positionStrategy)
+
+    const scrollStrategy = this.overlay.scrollStrategies.reposition();
+
+    this.currentOverlayRef = this.overlay.create({ 
+      positionStrategy,
+      scrollStrategy,
+      hasBackdrop: true,
+      backdropClass: 'transparent-backdrop',
+      panelClass: 'popup-panel'
+    });
+
+    console.log('Created overlay ref: ', this.currentOverlayRef);
+
+    const portal = new ComponentPortal(component, null, this.injector);
+    console.log('Portal ', portal)
+    const componentRef = this.currentOverlayRef?.attach(portal);
+
+    this.currentOverlayRef.backdropClick().subscribe(() => {
+      this.closePopup();
+    });
+
+    this.currentOverlayRef?.keydownEvents().subscribe((event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        this.closePopup();
+      }
+    })
+
+    console.log('REturning: ', componentRef);
+
+    return componentRef;
+  }
+
+  closePopup() {
+    if (this.currentOverlayRef) {
+      this.currentOverlayRef.dispose();
+      this.currentOverlayRef = null;
+    }
+  }
+}
+
+@Injectable({ providedIn: 'root' })
+export class SearchCriteriaService {
+  private criteria = {
+    cities: [] as string[],
+    dates: { start: null as Date | null, end: null as Date | null },
+    weekdays: [] as string[],
+    events: [] as string[],
+    quantity: null as number | null
+  };
+
+  setCities(cities: string[]) {
+    this.criteria.cities = cities;
+    console.log('Search criteria updated - cities:', cities);
+  }
+
+  setDates(start: Date | null, end: Date | null) {
+    this.criteria.dates = { start, end };
+    console.log('Search criteria updated - dates:', { start, end });
+  }
+
+  setWeekdays(weekdays: string[]) {
+    this.criteria.weekdays = weekdays;
+    console.log('Search criteria updated - weekdays:', weekdays);
+  }
+
+  setEvents(events: string[]) {
+    this.criteria.events = events;
+    console.log('Search criteria updated - events:', events);
+  }
+
+  setQuantity(quantity: number | null) {
+    this.criteria.quantity = quantity;
+    console.log('Search criteria updated - quantity:', quantity);
+  }
+
+  getCriteria() {
+    return { ...this.criteria }; // Return a copy to prevent direct mutation
+  }
+
+  clearCriteria() {
+    this.criteria = {
+      cities: [],
+      dates: { start: null, end: null },
+      weekdays: [],
+      events: [],
+      quantity: null
+    };
   }
 }

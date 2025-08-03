@@ -4,14 +4,16 @@ import { HousingLocationComponent } from './features/housing-location/housing-lo
 import { RouterModule } from '@angular/router';
 import { HeaderComponent } from './layout/header/header.component';
 import { FooterComponent } from './layout/footer/footer.component';
+import { RailComponent } from './features/rail/rail.component';
 
 @Component({
   selector: 'app-root',
-  imports: [HomeComponent, RouterModule, HeaderComponent, FooterComponent],
+  imports: [HomeComponent, RouterModule, HeaderComponent, FooterComponent, RailComponent],
   // <img class="brand-logo" src="/assets/logo.svg" alt="logo" aria-hidden="true" />
   template: `
     <main>
       <app-header></app-header>
+      <app-rail></app-rail>
       <section class="content">
         <router-outlet></router-outlet>
       </section>

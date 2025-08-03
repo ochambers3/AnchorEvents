@@ -4,6 +4,7 @@
 .content {
   padding: var(--content-padding);
 }
+
 app-footer.hidden {
   transform: translateY(100%);
   opacity: 0;
@@ -12,8 +13,8 @@ app-footer.hidden {
 
 app-footer {
   display: flex;
-  justify-content: space-between;
-  height: 40px;
+  justify-content: flex-end;
+  height: 60px;
   padding: var(--content-padding);
   /* box-shadow: 0px 5px 25px var(--shadow-color); */
   background-color: var(--primary-color);
@@ -26,5 +27,15 @@ app-footer {
   transform: translateY(0);
   opacity: 1;
   transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.home-layout {
+  display: flex;
+}
+
+.content {
+  margin-left: 64px;
+  padding: 16px;
+  width: 100%;
 }
   

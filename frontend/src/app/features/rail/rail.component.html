@@ -1,0 +1,24 @@
+<nav class="nav-rail">
+    @for (item of navItems(); track item.label) {
+      <button
+        class="nav-rail-button"
+        (click)="toggle(item.label)"
+        [class.active]="activeItem() === item.label"
+        [attr.aria-label]="item.label">
+        <mat-icon>{{ item.icon }}</mat-icon>
+        <span class="nav-label">{{ item.label }}</span>
+      </button>
+    }
+    
+    <!-- Separator div for visual spacing -->
+    <div class="nav-separator"></div>
+    
+    <!-- Enter/Go button -->
+    <button 
+        class="nav-rail-button go-button"
+        (click)="doSomething()"
+        [attr.aria-label]="'Apply Filters'">
+        <mat-icon>arrow_forward</mat-icon>
+        <span class="nav-label">Search</span>
+    </button>
+</nav>

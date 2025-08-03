@@ -6,6 +6,8 @@
     box-shadow: 0px 5px 25px var(--shadow-color);
     background-color: var(--primary-color);
     align-items: center;
+    position: relative;
+    z-index: 1000;
   }
 
   .anchor-events-logo {

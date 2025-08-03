@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { HousingLocationComponent } from '../housing-location/housing-location.component';
-import { HousingService } from '../housing.service';
-import { HousingLocationInfo } from '../housinglocation';
+import { HousingService } from '../../housing.service';
+import { HousingLocationInfo } from '../../housinglocation';
 
 @Component({
   standalone: true,

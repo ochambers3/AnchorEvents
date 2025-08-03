@@ -1,0 +1,6 @@
+@import '@fortawesome/fontawesome-free/css/all.css';
+
+.mat-mdc-icon-button {
+    color: var(--background-light-color);
+    /* padding: 15%; */
+}

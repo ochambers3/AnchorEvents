@@ -4,14 +4,16 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SearchCriteriaService } from '../../../housing.service';
+import { PopupService, SearchCriteriaService } from '../../../housing.service';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-dates',
   standalone: true,
-  imports: [MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule, FormsModule, ReactiveFormsModule],
+  imports: [MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule, FormsModule, ReactiveFormsModule, MatButtonModule],
   templateUrl: './dates.component.html',
-  styleUrl: './dates.component.css'
+  // styleUrl: './dates.component.css'
+  styleUrl: '../pop-up.css'
 })
 export class DatesComponent {
   @Input() contentComponent!: Type<any>;
@@ -19,11 +21,11 @@ export class DatesComponent {
   startDate: Date | null = null;
   endDate: Date | null = null;
 
-  constructor(private searchCriteria: SearchCriteriaService) {}
+  constructor(private searchCriteria: SearchCriteriaService, private popupService: PopupService) {}
 
   saveDates() {
-    if (this.startDate && this.endDate) {
-      this.searchCriteria.setDates(this.startDate, this.endDate);
-    }
+    this.searchCriteria.setDates(this.startDate, this.endDate);
+    this.popupService.closePopup();
+    console.log('Dates:', this.startDate, this.endDate);
   }
 }

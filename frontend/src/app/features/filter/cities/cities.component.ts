@@ -38,7 +38,8 @@ import { FormsModule } from '@angular/forms';
       </div>
     </div>
   `,
-  styleUrl: './cities.component.css'
+  // styleUrl: './cities.component.css'
+  styleUrl: '../pop-up.css'
 })
 export class CitiesComponent {
   cities: string[] = [];

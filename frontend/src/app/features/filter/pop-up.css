@@ -1,0 +1,69 @@
+/* Dates Popup Styles */
+.dates-popup {
+    padding: 20px;
+    min-width: 300px;
+    max-width: 400px;
+    background-color: var(--primary-color) !important;
+    color: aliceblue !important;
+    
+    /* Material Design Component CSS Custom Properties */
+    --mdc-filled-text-field-container-color: rgba(255, 255, 255, 0.1);
+    --mdc-filled-text-field-label-text-color: aliceblue;
+    --mdc-filled-text-field-input-text-color: aliceblue;
+    --mdc-protected-button-container-color: var(--accent-color);
+    --mdc-protected-button-label-text-color: white;
+    
+    /* Calendar icon color */
+    --mdc-icon-button-icon-color: aliceblue;
+    --mat-datepicker-toggle-icon-color: aliceblue;
+}
+
+/* Cities Popup Styles */
+.cities-popup {
+    padding: 20px;
+    min-width: 300px;
+    max-width: 400px;
+    background-color: var(--primary-color) !important;
+    color: aliceblue !important;
+    
+    /* Outline form field properties */
+    --mdc-outlined-text-field-outline-color: aliceblue;
+    --mdc-outlined-text-field-hover-outline-color: aliceblue;
+    --mdc-outlined-text-field-focus-outline-color: aliceblue;
+    --mdc-outlined-text-field-label-text-color: aliceblue;
+    --mdc-outlined-text-field-input-text-color: aliceblue;
+    --mdc-outlined-text-field-input-text-placeholder-color: rgba(240, 248, 255, 0.7);
+    
+    /* Chip properties */
+    --mdc-chip-container-color: var(--accent-color);
+    --mdc-chip-label-text-color: white;
+    --mdc-chip-icon-color: white;
+    --mdc-chip-trailing-action-color: white;
+    
+    /* Button properties */
+    --mdc-protected-button-container-color: var(--accent-color);
+    --mdc-protected-button-label-text-color: white;
+}
+
+/* Common styles for both popups */
+.dates-popup,
+.cities-popup {
+    h3 {
+        margin: 0 0 16px 0;
+        color: aliceblue;
+    }
+}
+
+.full-width {
+    width: 100%;
+}
+
+.chips-container {
+    margin: 16px 0;
+}
+
+.actions {
+    margin-top: 16px;
+    display: flex;
+    justify-content: flex-end;
+}

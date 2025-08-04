@@ -1,24 +1,133 @@
+/* Dates Popup Styles */
 .dates-popup {
-    padding: 20px;
-    min-width: 300px;
-    max-width: 400px;
+  padding: 20px;
+  min-width: 300px;
+  max-width: 400px;
+  background-color: var(--primary-color);
+  color: aliceblue;
+  
+  ::ng-deep {
+      /* Form field styling */
+      .mat-mdc-form-field {
+          .mat-mdc-text-field-wrapper {
+              background-color: rgba(255, 255, 255, 0.1);
+          }
+          
+          .mat-mdc-form-field-label {
+              color: aliceblue !important;
+          }
+          
+          .mat-mdc-input-element {
+              color: aliceblue !important;
+          }
+      }
+      
+      /* Calendar icon styling */
+      .mat-datepicker-toggle {
+          .mat-mdc-icon-button {
+              color: aliceblue !important;
+              
+              .mat-mdc-button-touch-target {
+                  background-color: transparent;
+              }
+          }
+      }
+      
+      /* Save button styling */
+      .mat-mdc-raised-button {
+          background-color: var(--accent-color) !important;
+          color: white !important;
+      }
+  }
+}
+
+/* Cities Popup Styles */
+.cities-popup {
+  padding: 20px;
+  min-width: 300px;
+  max-width: 400px;
+  background-color: var(--primary-color);
+  color: aliceblue;
+  
+  ::ng-deep {
+      /* Outline form field styling */
+      .mat-mdc-form-field {
+          &.mat-mdc-form-field-type-mat-input {
+              .mat-mdc-text-field-wrapper {
+                  background-color: rgba(255, 255, 255, 0.1);
+              }
+              
+              .mdc-notched-outline {
+                  .mdc-notched-outline__leading,
+                  .mdc-notched-outline__notch,
+                  .mdc-notched-outline__trailing {
+                      border-color: aliceblue !important;
+                  }
+              }
+              
+              .mat-mdc-form-field-label {
+                  color: aliceblue !important;
+              }
+              
+              .mat-mdc-input-element {
+                  color: aliceblue !important;
+                  
+                  &::placeholder {
+                      color: rgba(240, 248, 255, 0.7) !important;
+                  }
+              }
+          }
+      }
+      
+      /* Chip styling */
+      .mat-mdc-chip-set {
+          .mat-mdc-chip {
+              background-color: var(--accent-color) !important;
+              color: white !important;
+              
+              .mat-mdc-chip-action-label {
+                  color: white !important;
+              }
+              
+              /* Remove icon styling */
+              .mat-mdc-chip-remove {
+                  color: white !important;
+                  
+                  &:hover {
+                      background-color: rgba(255, 255, 255, 0.2) !important;
+                  }
+              }
+          }
+      }
+      
+      /* Save button styling */
+      .mat-mdc-raised-button {
+          background-color: var(--accent-color) !important;
+          color: white !important;
+      }
+  }
+}
+
+/* Common styles for both popups */
+.dates-popup,
+.cities-popup {
+  h3 {
+      margin: 0 0 16px 0;
+      color: aliceblue !important;
   }
   
   .full-width {
-    width: 100%;
+      width: 100%;
   }
   
   .chips-container {
-    margin: 16px 0;
+      margin: 16px 0;
   }
   
   .actions {
-    margin-top: 16px;
-    display: flex;
-    justify-content: flex-end;
+      margin-top: 16px;
+      display: flex;
+      justify-content: flex-end;
+      color: var(--accent-color);
   }
-  
-  h3 {
-    margin: 0 0 16px 0;
-    color: #333;
-  }
+}

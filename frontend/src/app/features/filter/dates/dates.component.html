@@ -1,0 +1,20 @@
+<div class="dates-popup">
+    <h3>Select Dates</h3>
+    <mat-form-field appearance="fill">
+        <mat-label>Start Date</mat-label>
+        <input matInput [matDatepicker]="startPicker" [(ngModel)]="startDate">
+        <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+        <mat-datepicker #startPicker></mat-datepicker>
+    </mat-form-field>
+      
+    <mat-form-field appearance="fill">
+        <mat-label>End Date</mat-label>
+        <input matInput [matDatepicker]="endPicker" [(ngModel)]="endDate">
+        <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+        <mat-datepicker #endPicker></mat-datepicker>
+    </mat-form-field>
+      
+    <div class="actions">
+        <button mat-raised-button (click)="saveDates()">Save Dates</button>
+    </div>
+</div>

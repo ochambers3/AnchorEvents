@@ -1,0 +1,32 @@
+.cities-popup {
+    padding: 20px;
+    min-width: 300px;
+    max-width: 400px;
+    background-color: var(--primary-color) !important;
+    color: aliceblue !important;
+    
+    --mdc-filled-text-field-container-color: rgba(255, 255, 255, 0.1);
+    --mdc-filled-text-field-label-text-color: aliceblue;
+    --mdc-filled-text-field-input-text-color: aliceblue;
+    --mdc-protected-button-container-color: var(--accent-color);
+    --mdc-protected-button-label-text-color: white;
+  }
+  
+  .full-width {
+    width: 100%;
+  }
+  
+  .chips-container {
+    margin: 16px 0;
+  }
+  
+  .actions {
+    margin-top: 16px;
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  h3 {
+    margin: 0 0 16px 0;
+    color: aliceblue;
+  }

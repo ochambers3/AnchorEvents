@@ -10,7 +10,6 @@
   /* Colors */
   --primary-color: #38405F;
   --secondary-color: #F1E8B8;
-  --thirdiary-color: #83AF83;
   --accent-color: #83AF83;
   --shadow-color: #8B939C;
   --background-light-color: #D9D9D9;
@@ -127,6 +126,37 @@ button.secondary:hover {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 var(--content-padding);
+}
+
+/* Add these styles to your global styles.css or styles.scss */
+
+.transparent-backdrop {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.popup-panel {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+/* Optional: Add some animation */
+.popup-panel {
+  animation: popup-appear 0.2s ease-out;
+}
+
+@keyframes popup-appear {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 /* ===== RESPONSIVE BREAKPOINTS ===== */

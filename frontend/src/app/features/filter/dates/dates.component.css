@@ -1,0 +1,24 @@
+.dates-popup {
+    padding: 20px;
+    min-width: 300px;
+    max-width: 400px;
+  }
+  
+  .full-width {
+    width: 100%;
+  }
+  
+  .chips-container {
+    margin: 16px 0;
+  }
+  
+  .actions {
+    margin-top: 16px;
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  h3 {
+    margin: 0 0 16px 0;
+    color: #333;
+  }

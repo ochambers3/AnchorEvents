@@ -2,6 +2,7 @@ import { Injectable, Injector, Type } from '@angular/core';
 import { HousingLocationInfo } from './housinglocation';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -30,11 +31,12 @@ export class HousingService {
 @Injectable({ providedIn: 'root' })
 export class PopupService {
   private currentOverlayRef: OverlayRef | null = null;
+  private popupClosedSubject = new Subject<void>();
+  popupClosed$ = this.popupClosedSubject.asObservable();
 
   constructor(private overlay: Overlay, private injector: Injector) {}
 
   openPopup(component: Type<any>, origin: HTMLElement) {
-    console.log('Inside service open Popup');
     this.closePopup();
 
     const positionStrategy = this.overlay.position()
@@ -47,8 +49,6 @@ export class PopupService {
       ])
       .withPush(true);
 
-    console.log('Postioin strategy: ', positionStrategy)
-
     const scrollStrategy = this.overlay.scrollStrategies.reposition();
 
     this.currentOverlayRef = this.overlay.create({ 
@@ -59,10 +59,7 @@ export class PopupService {
       panelClass: 'popup-panel'
     });
 
-    console.log('Created overlay ref: ', this.currentOverlayRef);
-
     const portal = new ComponentPortal(component, null, this.injector);
-    console.log('Portal ', portal)
     const componentRef = this.currentOverlayRef?.attach(portal);
 
     this.currentOverlayRef.backdropClick().subscribe(() => {
@@ -75,8 +72,6 @@ export class PopupService {
       }
     })
 
-    console.log('REturning: ', componentRef);
-
     return componentRef;
   }
 
@@ -84,6 +79,7 @@ export class PopupService {
     if (this.currentOverlayRef) {
       this.currentOverlayRef.dispose();
       this.currentOverlayRef = null;
+      this.popupClosedSubject.next();
     }
   }
 }
@@ -124,7 +120,7 @@ export class SearchCriteriaService {
   }
 
   getCriteria() {
-    return { ...this.criteria }; // Return a copy to prevent direct mutation
+    return { ...this.criteria };
   }
 
   clearCriteria() {
@@ -135,5 +131,9 @@ export class SearchCriteriaService {
       events: [],
       quantity: null
     };
+  }
+
+  sendRequest() {
+    console.log('Sending requestusing data...', this.criteria)
   }
 }

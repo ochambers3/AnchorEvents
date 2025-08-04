@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SearchCriteriaService } from '../../../housing.service';
+import { PopupService, SearchCriteriaService } from '../../../housing.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatInputModule } from '@angular/material/input';
@@ -34,7 +34,7 @@ import { FormsModule } from '@angular/forms';
       }
       
       <div class="actions">
-        <button mat-raised-button color="primary" (click)="save()">Save Cities</button>
+        <button mat-raised-button (click)="save()">Save Cities</button>
       </div>
     </div>
   `,
@@ -44,7 +44,7 @@ export class CitiesComponent {
   cities: string[] = [];
   city: string = '';
 
-  constructor(private searchCriteria: SearchCriteriaService) {
+  constructor(private searchCriteria: SearchCriteriaService, private popupService: PopupService) {
     const existing = this.searchCriteria.getCriteria();
     this.cities = [...existing.cities]
   }
@@ -62,8 +62,7 @@ export class CitiesComponent {
 
   save() {
     this.searchCriteria.setCities(this.cities);
+    this.popupService.closePopup();
     console.log('Cities saved:', this.cities);
-    // Close pop up or emit event?
   }
 }
-

@@ -1,13 +1,1 @@
-<mat-form-field>
-    <mat-label>Cities</mat-label>
-    <input matInput [(ngModel)]="city" (keyup.enter)="addCity()" />
-  </mat-form-field>
-  <div>
-    <mat-chip-list>
-      <mat-chip *ngFor="let c of cities" (removed)="removeCity(c)">
-        {{ c }}
-        <mat-icon matChipRemove>cancel</mat-icon>
-      </mat-chip>
-    </mat-chip-list>
-  </div>
-<button mat-button color="primary" (click)="save()">Save</button>
+<p>cities works!</p>

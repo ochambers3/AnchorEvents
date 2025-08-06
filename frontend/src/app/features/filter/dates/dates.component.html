@@ -1,30 +1,47 @@
 <div class="dates-popup">
     <h3>Select Dates</h3>
-    <!-- <mat-form-field appearance="fill">
-        <mat-label>Start Date</mat-label>
-        <input matInput [matDatepicker]="startPicker" [(ngModel)]="startDate">
-        <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
-        <mat-datepicker #startPicker></mat-datepicker>
-    </mat-form-field>
-      
-    <mat-form-field appearance="fill">
-        <mat-label>End Date</mat-label>
-        <input matInput [matDatepicker]="endPicker" [(ngModel)]="endDate">
-        <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
-        <mat-datepicker #endPicker></mat-datepicker>
-    </mat-form-field> -->
-    <mat-form-field appearance="fill">
-        <mat-label>Enter a date range</mat-label>
-        <mat-date-range-input [rangePicker]="picker">
-          <input matStartDate placeholder="Start date">
-          <input matEndDate placeholder="End date">
-        </mat-date-range-input>
-        <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-date-range-picker #picker></mat-date-range-picker>
-      </mat-form-field>
-      
-    <div class="actions">
-        <button mat-raised-button (click)="saveDates()">Save Dates</button>
-    </div>
+    <form [formGroup]="dateForm">
+        <mat-form-field appearance="fill">
+            <mat-label>Start Date</mat-label>
+            <input matInput [matDatepicker]="startPicker" formControlName="startDate">
+            <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+            <mat-datepicker #startPicker></mat-datepicker>
+            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-error>{{ getErrorMessage('startDate') }}</mat-error>
+        </mat-form-field>
+          
+        <mat-form-field appearance="fill">
+            <mat-label>End Date</mat-label>
+            <input matInput [matDatepicker]="endPicker" formControlName="endDate">
+            <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+            <mat-datepicker #endPicker></mat-datepicker>
+            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-error>{{ getErrorMessage('endDate') }}</mat-error>
+        </mat-form-field>
+
+        @if (startDate?.value || endDate?.value) {
+            <div class="date-summary">
+                <h4>Selected Dates:</h4>
+                <div class="date-item">
+                    <span class="date-value">{{ dateRangeDisplay }}</span>
+                </div>
+            </div>
+        }
+
+        @if (dateForm.errors && dateForm.touched) {
+            <div class="form-errors">
+                @if (dateForm.errors['invalidOrder']) {
+                    <mat-error>End date must be after start date</mat-error>
+                }
+            </div>
+        }
+          
+        <div class="actions">
+            <button mat-raised-button 
+                    (click)="saveDates()" 
+                    [disabled]="!dateForm.valid">
+                Save Dates
+            </button>
+        </div>
+    </form>
 </div>

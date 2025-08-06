@@ -6,6 +6,7 @@ import { PopupService } from '../../housing.service';
 import { SearchCriteriaService } from '../../housing.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DatesComponent } from '../filter/dates/dates.component';
+import { EventsComponent } from '../filter/events/events.component';
 
 @Component({
   selector: 'app-rail',
@@ -22,7 +23,7 @@ export class RailComponent {
   }
 
   navItems = signal([
-    { icon: 'nightlife', label: 'Events', component: null },
+    { icon: 'nightlife', label: 'Events', component: EventsComponent },
     { icon: 'today', label: 'Dates', component: DatesComponent },
     { icon: 'next_week', label: 'Weekdays', component: null },
     { icon: 'location_city', label: 'Cities', component: CitiesComponent },

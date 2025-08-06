@@ -1,0 +1,34 @@
+<div class="events-popup">
+    <h3>Select Events</h3>
+    <p>Ignore to search all events</p>
+    <div class="event">
+        <button mat-raised-button (click)="saveMusic()">Music</button>
+    </div>
+    @if (music === true) {
+        <p>Ignore to include all artists</p>
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Artists</mat-label>
+            <input matInput [(ngModel)]="artist" (keyup.enter)="addArtist()" placeholder="Enter artist name" />
+        </mat-form-field>
+    }
+    @if (music === true && artists.length > 0) {
+        <div class="chips-container">
+            <mat-chip-set>
+              @for (c of artists; track c) {
+                <mat-chip (removed)="removeArtist(c)" removable="true">
+                  {{ c }}
+                  <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+              }
+            </mat-chip-set>
+        </div>
+    }
+    <div class="separator"></div>
+    <div class="event">
+        <button mat-raised-button (click)="saveArtist()">Sports</button>
+    </div>
+
+    <div class="actions">
+        <button mat-raised-button (click)="saveChoice()">Save Choices</button>
+    </div>
+</div>

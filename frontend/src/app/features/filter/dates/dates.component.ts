@@ -6,11 +6,12 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PopupService, SearchCriteriaService } from '../../../housing.service';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDateRangePicker } from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-dates',
   standalone: true,
-  imports: [MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule, FormsModule, ReactiveFormsModule, MatButtonModule],
+  imports: [MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule, FormsModule, ReactiveFormsModule, MatButtonModule, MatDateRangePicker],
   templateUrl: './dates.component.html',
   // styleUrl: './dates.component.css'
   styleUrl: '../pop-up.css'
